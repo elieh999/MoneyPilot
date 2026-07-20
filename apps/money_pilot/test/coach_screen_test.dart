@@ -11,6 +11,8 @@ import 'package:money_pilot/src/models.dart';
 import 'package:money_pilot/src/screens/coach_screen.dart';
 import 'package:money_pilot/src/theme.dart';
 
+import 'golden_test_support.dart';
+
 class _MemoryRepository extends LocalRepository {
   @override
   Future<AppData?> load() async => null;
@@ -32,6 +34,7 @@ void main() {
   testWidgets('coach panel renders at reported width and replies in Arabic', (
     tester,
   ) async {
+    useCrossPlatformGoldenComparator(Uri.parse('test/coach_screen_test.dart'));
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(883, 1014);
     addTearDown(tester.view.resetDevicePixelRatio);

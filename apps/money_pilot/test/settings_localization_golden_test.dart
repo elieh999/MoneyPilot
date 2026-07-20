@@ -11,6 +11,8 @@ import 'package:money_pilot/src/models.dart';
 import 'package:money_pilot/src/screens/settings_screen.dart';
 import 'package:money_pilot/src/theme.dart';
 
+import 'golden_test_support.dart';
+
 class _MemoryRepository extends LocalRepository {
   @override
   Future<AppData?> load() async => null;
@@ -32,6 +34,9 @@ void main() {
   testWidgets('Arabic settings contain no English fallback in key controls', (
     tester,
   ) async {
+    useCrossPlatformGoldenComparator(
+      Uri.parse('test/settings_localization_golden_test.dart'),
+    );
     tester.view.physicalSize = const Size(1440, 1000);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.resetPhysicalSize);
