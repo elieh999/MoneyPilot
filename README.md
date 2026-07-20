@@ -49,6 +49,12 @@ Run the API and client in separate terminals:
 .\scripts\run-flutter.ps1
 ```
 
+```powershell
+testerrrrrrrrrrrrrrrrrrrrrrrrrr
+```
+
+
+
 API documentation is available at `http://localhost:8000/docs` when the API is
 running. MinIO's console is at `http://localhost:9001`, and Mailpit is at
 `http://localhost:8025`.
