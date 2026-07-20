@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "money_unit": "minor",
+  "percent_unit": "basis_points",
+  "rounding": "half_away_from_zero",
+  "safe_to_spend": [
+    {
+      "name": "typical_pay_cycle",
+      "input": {
+        "available_minor": 325000,
+        "confirmed_income_minor": 50000,
+        "pending_outgoing_minor": 12000,
+        "required_bills_minor": 95000,
+        "minimum_debt_minor": 20000,
+        "planned_savings_minor": 30000,
+        "goal_contributions_minor": 15000,
+        "emergency_reserve_minor": 75000,
+        "credit_obligations_minor": 18000,
+        "safety_buffer_minor": 25000,
+        "known_required_minor": 10000,
+        "budget_remaining_minor": 100000
+      },
+      "expected_minor": 75000
+    },
+    {
+      "name": "liquidity_is_negative",
+      "input": {
+        "available_minor": 20000,
+        "confirmed_income_minor": 0,
+        "pending_outgoing_minor": 5000,
+        "required_bills_minor": 40000,
+        "minimum_debt_minor": 10000,
+        "planned_savings_minor": 0,
+        "goal_contributions_minor": 0,
+        "emergency_reserve_minor": 0,
+        "credit_obligations_minor": 0,
+        "safety_buffer_minor": 5000,
+        "known_required_minor": 0,
+        "budget_remaining_minor": null
+      },
+      "expected_minor": 0
+    },
+    {
+      "name": "budget_is_tighter_than_cash",
+      "input": {
+        "available_minor": 500000,
+        "confirmed_income_minor": 0,
+        "pending_outgoing_minor": 0,
+        "required_bills_minor": 50000,
+        "minimum_debt_minor": 0,
+        "planned_savings_minor": 50000,
+        "goal_contributions_minor": 0,
+        "emergency_reserve_minor": 100000,
+        "credit_obligations_minor": 0,
+        "safety_buffer_minor": 25000,
+        "known_required_minor": 0,
+        "budget_remaining_minor": 45000
+      },
+      "expected_minor": 45000
+    }
+  ],
+  "savings_rate": [
+    {
+      "name": "twenty_percent",
+      "input": {"income_minor": 300000, "expense_minor": 240000},
+      "expected_basis_points": 2000
+    },
+    {
+      "name": "spending_exceeds_income",
+      "input": {"income_minor": 100000, "expense_minor": 125000},
+      "expected_basis_points": 0
+    },
+    {
+      "name": "no_income",
+      "input": {"income_minor": 0, "expense_minor": 0},
+      "expected_basis_points": 0
+    }
+  ],
+  "budget_status": [
+    {
+      "name": "on_track",
+      "input": {"planned_minor": 80000, "spent_minor": 40000},
+      "expected": {"remaining_minor": 40000, "usage_basis_points": 5000}
+    },
+    {
+      "name": "overspent",
+      "input": {"planned_minor": 50000, "spent_minor": 62500},
+      "expected": {"remaining_minor": -12500, "usage_basis_points": 12500}
+    },
+    {
+      "name": "zero_plan",
+      "input": {"planned_minor": 0, "spent_minor": 1200},
+      "expected": {"remaining_minor": -1200, "usage_basis_points": 0}
+    }
+  ]
+}

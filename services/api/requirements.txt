@@ -1,0 +1,2 @@
+-e ../../packages/financial_core_python
+-e .[dev]

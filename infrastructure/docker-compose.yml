@@ -1,0 +1,105 @@
+name: money-pilot
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-money_pilot}
+      POSTGRES_USER: ${POSTGRES_USER:-money_pilot}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  minio:
+    image: quay.io/minio/minio:latest
+    restart: unless-stopped
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?Set MINIO_ROOT_USER in .env}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?Set MINIO_ROOT_PASSWORD in .env}
+    ports:
+      - "${MINIO_API_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - minio_data:/data
+
+  mailpit:
+    image: axllent/mailpit:v1.21
+    restart: unless-stopped
+    ports:
+      - "${MAILPIT_SMTP_PORT:-1025}:1025"
+      - "${MAILPIT_UI_PORT:-8025}:8025"
+
+  api:
+    build:
+      context: ..
+      dockerfile: infrastructure/api.Dockerfile
+    restart: unless-stopped
+    environment:
+      APP_NAME: ${APP_NAME:-MoneyPilot}
+      MONEY_PILOT_ENVIRONMENT: ${MONEY_PILOT_ENVIRONMENT:-development}
+      MONEY_PILOT_DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-money_pilot}:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@postgres:5432/${POSTGRES_DB:-money_pilot}
+      MONEY_PILOT_REDIS_URL: redis://redis:6379/0
+      MONEY_PILOT_S3_ENDPOINT: http://minio:9000
+      MONEY_PILOT_S3_REGION: ${MONEY_PILOT_S3_REGION:-us-east-1}
+      MONEY_PILOT_S3_BUCKET: ${MONEY_PILOT_S3_BUCKET:-money-pilot-dev}
+      MONEY_PILOT_S3_ACCESS_KEY: ${MONEY_PILOT_S3_ACCESS_KEY:?Set MONEY_PILOT_S3_ACCESS_KEY in .env}
+      MONEY_PILOT_S3_SECRET_KEY: ${MONEY_PILOT_S3_SECRET_KEY:?Set MONEY_PILOT_S3_SECRET_KEY in .env}
+      MONEY_PILOT_SMTP_HOST: mailpit
+      MONEY_PILOT_SMTP_PORT: 1025
+      MONEY_PILOT_JWT_SECRET: ${MONEY_PILOT_JWT_SECRET:?Set MONEY_PILOT_JWT_SECRET in .env}
+      MONEY_PILOT_ACCESS_TOKEN_MINUTES: ${MONEY_PILOT_ACCESS_TOKEN_MINUTES:-15}
+      MONEY_PILOT_REFRESH_TOKEN_DAYS: ${MONEY_PILOT_REFRESH_TOKEN_DAYS:-30}
+      MONEY_PILOT_AI_PROVIDER: ${MONEY_PILOT_AI_PROVIDER:-disabled}
+      MONEY_PILOT_AI_BASE_URL: ${MONEY_PILOT_AI_BASE_URL:-}
+      MONEY_PILOT_AI_API_KEY: ${MONEY_PILOT_AI_API_KEY:-}
+      MONEY_PILOT_AI_MODEL: ${MONEY_PILOT_AI_MODEL:-}
+    ports:
+      - "${MONEY_PILOT_API_PORT:-8000}:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_started
+      mailpit:
+        condition: service_started
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8000/health/ready', timeout=2)"
+      interval: 10s
+      timeout: 3s
+      retries: 12
+      start_period: 20s
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:

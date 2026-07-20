@@ -1,0 +1,32 @@
+MONEYPILOT 1.3.0 - READY TO RUN
+===============================
+
+Double-click "MoneyPilot" in this folder.
+
+If the shortcut is unavailable, open the MoneyPilot folder and double-click
+MoneyPilot.exe. No installation, Python, Flutter, Node.js, API key, or internet
+connection is required.
+
+FIRST LAUNCH
+1. Choose "Create an account".
+2. Enter your name, email, and a strong password.
+3. Save the one-time recovery code somewhere private.
+4. Open the empty workspace and add only your real records when ready.
+
+The Local Coach works offline. It answers from the records you enter and will say
+when information is missing. Suggested budget changes require your approval.
+
+LANGUAGE
+Open Settings > Appearance & language to select English, French, or Arabic.
+Arabic automatically switches the app to right-to-left layout. The Coach
+understands and replies in the selected language.
+
+CALENDAR AND THEMES
+Open Calendar to review daily income, expenses, transactions, no-spend days,
+and the month's highest-spending day. Settings includes Ocean, Cyan, Forest,
+Violet, and Sunset palettes plus optional glow effects.
+
+Use Settings to sign out, securely wipe financial data, change coaching
+preferences, or permanently delete a local profile. Wiping requires the word
+WIPE. Account deletion requires the account password. Financial records are
+isolated per profile on this Windows device.
