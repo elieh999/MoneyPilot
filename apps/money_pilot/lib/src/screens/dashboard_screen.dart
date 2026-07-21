@@ -56,7 +56,7 @@ class DashboardScreen extends ConsumerWidget {
                     : MoneyFormatter.percent(controller.savingsRateBasisPoints),
                 detail: controller.monthlyIncomeMinor <= 0
                     ? 'Income is needed for a meaningful rate'
-                    : 'Based on current-month cash flow',
+                    : 'Based on cash flow this month',
                 icon: Icons.savings_outlined,
                 accent: AppTheme.mint,
               ),
@@ -237,7 +237,7 @@ class _SafeToSpendCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(
-                'Your safe-to-spend breakdown',
+                'Your safe spending breakdown',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
                 ),

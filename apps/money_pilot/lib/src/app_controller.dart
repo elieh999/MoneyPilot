@@ -177,7 +177,7 @@ class AppController extends StateNotifier<AppData> {
         .where((account) => account.includedInSafeToSpend && !account.isCredit)
         .fold(0, (total, account) => total + account.balanceMinor);
     // Local account balances are available balances and already include pending
-    // authorizations, so passing them again would double-count the outflow.
+    // authorizations, so passing them again would count the outflow twice.
     const pending = 0;
     final bills = state.bills
         .where((bill) {
@@ -186,7 +186,7 @@ class AppController extends StateNotifier<AppData> {
             bill.dueDate.month,
             bill.dueDate.day,
           );
-          // Overdue, due-today, and upcoming obligations all remain protected.
+          // Overdue bills, bills due today, and upcoming bills stay protected.
           return !bill.isPaid && !due.isAfter(horizon);
         })
         .fold(0, (total, bill) => total + bill.amountMinor);

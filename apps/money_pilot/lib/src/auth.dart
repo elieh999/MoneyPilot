@@ -285,7 +285,7 @@ class LocalAuthRepository {
       await _saveStore(store.copyWith(credentials: records));
       if (lockedUntil != null) {
         throw const AuthException(
-          'Too many attempts. Sign-in is locked for 30 seconds.',
+          'Too many attempts. Signing in is locked for 30 seconds.',
         );
       }
       throw const AuthException('Invalid email or password.');

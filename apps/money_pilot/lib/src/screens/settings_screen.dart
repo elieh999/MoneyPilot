@@ -459,7 +459,7 @@ class _CoachPreferencesCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           AppText(
-            'This amount stays protected in every safe-to-spend calculation.',
+            'This amount stays protected in every safe spending calculation.',
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
@@ -546,7 +546,7 @@ class _PrivacyCard extends StatelessWidget {
             icon: Icons.fingerprint,
             title: 'Biometric lock preference',
             subtitle:
-                'Preference saved; device biometric integration is platform-dependent.',
+                'Preference saved. Biometric support depends on the device.',
             value: settings.biometricLock,
             onChanged: (value) =>
                 onChanged(settings.copyWith(biometricLock: value)),
@@ -555,7 +555,7 @@ class _PrivacyCard extends StatelessWidget {
             icon: Icons.cloud_outlined,
             title: 'API connection checks',
             subtitle:
-                'Off keeps this profile device-only. Financial upload is not enabled.',
+                'When off, this profile stays on this device. Financial upload is not enabled.',
             value: settings.cloudSync,
             onChanged: (value) =>
                 onChanged(settings.copyWith(cloudSync: value)),
@@ -677,7 +677,7 @@ class _DataCard extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           AppText(
-            'Financial records are encrypted and isolated by signed-in local profile. API passwords and session tokens are never saved to disk.',
+            'Financial records are encrypted and kept separate for each signed in local profile. API passwords and session tokens are never saved to disk.',
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],

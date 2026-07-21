@@ -447,8 +447,8 @@ class _AuthStoryPanel extends StatelessWidget {
           SizedBox(height: compact ? 22 : 52),
           AppText(
             compact
-                ? 'Your money.\nNo made-up numbers.'
-                : 'Your money.\nNo made-up numbers.\nNo financial shaming.',
+                ? 'Your money.\nNo invented numbers.'
+                : 'Your money.\nNo invented numbers.\nNo financial shaming.',
             style: TextStyle(
               color: Colors.white,
               fontSize: compact ? 28 : 42,

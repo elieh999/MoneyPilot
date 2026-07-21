@@ -21,7 +21,7 @@ void main() {
   });
 
   group('shared financial contract vectors', () {
-    test('safe-to-spend matches every cross-runtime vector', () {
+    test('safe spending matches every shared runtime example', () {
       final vectors = contracts['safe_to_spend'] as List<dynamic>;
       for (final rawVector in vectors) {
         final vector = Map<String, dynamic>.from(rawVector as Map);
