@@ -53,18 +53,18 @@ void main() {
     expect(requests.last.headers['Authorization'], 'Bearer test-token');
   });
 
-  test('device-only mode does not make a network request', () async {
+  test('local mode does not make a network request', () async {
     final dio = Dio()
       ..interceptors.add(
         InterceptorsWrapper(
           onRequest: (options, handler) =>
-              fail('Network should not be used in device-only mode.'),
+              fail('Network should not be used in local mode.'),
         ),
       );
     final gateway = DioSyncGateway(client: dio);
     expect(
       await gateway.sync(buildEmptyData()),
-      'Device-only • encrypted locally',
+      'Stored on this device • encrypted locally',
     );
   });
 }

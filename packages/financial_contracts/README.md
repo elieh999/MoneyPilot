@@ -1,7 +1,7 @@
-# Financial calculation contracts
+# Shared financial examples
 
 MoneyPilot has two runtime implementations of its money calculations: Python on
-the API and Dart on the client. This package is the language-neutral contract
+the API and Dart on the client. This package contains the shared examples
 between them.
 
 All monetary inputs and outputs are integer minor units. Percentages are integer
@@ -20,14 +20,14 @@ included available balances
 - minimum debt payments before the horizon
 - planned savings and goal contributions
 - emergency reserve
-- credit-card obligations due before the horizon
+- credit card obligations due before the horizon
 - user safety buffer
-- known one-time required expenses
+- known required expenses that occur once
 ```
 
 The result is never below zero. If a discretionary budget remainder is supplied,
-safe-to-spend is the lower of the non-negative liquidity ceiling and the
-non-negative budget remainder. Excluded accounts and obligations must be removed
+safe spending is the lower of the liquidity ceiling, limited to zero or greater, and the
+budget remainder, limited to zero or greater. Excluded accounts and obligations must be removed
 before calling the calculation.
 
 ## Savings rate

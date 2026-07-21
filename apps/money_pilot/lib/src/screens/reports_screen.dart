@@ -58,7 +58,7 @@ class ReportsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 20),
           SectionCard(
-            title: 'Six-month cash forecast',
+            title: 'Cash forecast for six months',
             trailing: const StatusPill(
               label: 'Scenario, not a promise',
               icon: Icons.info_outline,
@@ -272,7 +272,7 @@ class _InsightPanel extends StatelessWidget {
           _InsightRow(
             icon: Icons.savings_outlined,
             title: 'Savings rate ${MoneyFormatter.percent(savingsRate)}',
-            detail: 'Calculated only when current-month income is positive.',
+            detail: 'Calculated only when income this month is positive.',
           ),
           const SizedBox(height: 18),
           _InsightRow(

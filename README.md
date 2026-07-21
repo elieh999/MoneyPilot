@@ -109,7 +109,7 @@ and Flutter tests when those tools are installed.
 - Flutter local profiles and optional FastAPI accounts remain separate identities.
 - Remote AI providers are not configured by default.
 - The local encryption key is stored separately in app preferences, not in a
-  platform hardware-backed key store.
+  hardware protected key store.
 - Store signing, hosted infrastructure, and production monitoring are not part of
   this repository yet.
 

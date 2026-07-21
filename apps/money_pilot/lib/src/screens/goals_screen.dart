@@ -19,7 +19,7 @@ class GoalsScreen extends ConsumerWidget {
     );
     return PageFrame(
       title: 'Goals',
-      subtitle: 'Turn longer-term plans into visible, manageable milestones.',
+      subtitle: 'Turn long term plans into clear, manageable milestones.',
       actions: [
         FilledButton.icon(
           onPressed: () => showGoalEditor(context),

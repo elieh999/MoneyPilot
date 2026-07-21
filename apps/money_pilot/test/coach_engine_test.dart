@@ -79,7 +79,7 @@ void main() {
     expect(reply.action!.kind, 'upsert_budget');
     expect(reply.action!.payload['categoryId'], 'dining');
     expect(reply.action!.payload['plannedMinor'], 25000);
-    expect(reply.text, contains('nothing changes unless you approve'));
+    expect(reply.text, contains('Nothing changes unless you approve'));
   });
 
   test('coach replies in French when French is selected', () async {

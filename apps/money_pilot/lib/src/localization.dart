@@ -175,7 +175,7 @@ class AppLocalizations {
       ),
       (
         RegExp(
-          r'^The purchase fits the records you entered\. Your selected (\d+)-day pause ends on (.+)\.$',
+          r'^The purchase fits the records you entered\. Your (\d+) day pause ends on (.+)\.$',
         ),
         (match) => language == 'ar'
             ? 'يناسب الشراء البيانات التي أدخلتها. تنتهي فترة الانتظار المحددة ومدتها ${match[1]} أيام في ${match[2]}.'
@@ -263,11 +263,11 @@ class AppLocalizations {
       'checkingNumbers': 'Checking your numbers…',
       'coachContext': 'Coach context',
       'coachContextBody':
-          'The Local Coach reads only this signed-in profile and never invents missing numbers.',
+          'The Local Coach reads only this signed in profile and never invents missing numbers.',
       'openBills': 'Open bills',
       'safetyContract': 'Safety contract',
       'explainsBasis': 'Explains the basis for suggestions',
-      'followUps': 'Supports follow-up conversation',
+      'followUps': 'Supports ongoing conversation',
       'oneAction': 'Prepares one explicit action at a time',
       'confirmation': 'Requires confirmation before applying',
       'neverMovesMoney': 'Never moves money',

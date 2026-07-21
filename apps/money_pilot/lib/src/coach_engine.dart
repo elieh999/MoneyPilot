@@ -88,7 +88,7 @@ class LocalCoachEngine {
     if (_hasAny(lower, ['what can you do', 'help me', 'how do you work'])) {
       return CoachReply(
         text:
-            'I can explain safe-to-spend, total cash flow, category spending, upcoming bills, savings goals, and purchase affordability. I can also draft a category budget, but I cannot apply it without your approval. Your data stays on this device while the Local Coach is active.',
+            'I can explain your safe spending amount, cash flow, category spending, upcoming bills, savings goals, and purchase affordability. I can also draft a category budget, but I cannot apply it without your approval. Your data stays on this device while the Local Coach is active.',
       );
     }
 
@@ -114,14 +114,14 @@ class LocalCoachEngine {
         return CoachReply(
           text: _styled(
             style,
-            '${MoneyFormatter.amount(amount)} fits inside your current safe-to-spend estimate of ${MoneyFormatter.amount(safeToSpendMinor)}. It would use about $share% of that allowance and leave ${MoneyFormatter.amount(after)}. This is an estimate based only on the bills, balances, budgets, and reserves you entered.',
+            '${MoneyFormatter.amount(amount)} fits inside your current safe spending estimate of ${MoneyFormatter.amount(safeToSpendMinor)}. It would use about $share% of that allowance and leave ${MoneyFormatter.amount(after)}. This estimate uses only the bills, balances, budgets, and reserves you entered.',
           ),
         );
       }
       return CoachReply(
         text: _styled(
           style,
-          '${MoneyFormatter.amount(amount)} is ${MoneyFormatter.amount(amount - safeToSpendMinor)} above your current safe-to-spend estimate. Waiting, saving toward it, or reducing another flexible category would protect the commitments you entered.',
+          '${MoneyFormatter.amount(amount)} is ${MoneyFormatter.amount(amount - safeToSpendMinor)} above your current safe spending estimate. Waiting, saving toward it, or reducing another flexible category would protect the commitments you entered.',
         ),
       );
     }
@@ -130,7 +130,7 @@ class LocalCoachEngine {
       if (data.accounts.isEmpty) {
         return const CoachReply(
           text:
-              'Safe-to-spend is unavailable until you add at least one cash, checking, or savings account. I will keep it at zero instead of inventing a balance.',
+              'Your safe spending amount is unavailable until you add at least one cash, checking, or savings account. I will keep it at zero instead of inventing a balance.',
         );
       }
       final openBills = data.bills
@@ -138,7 +138,7 @@ class LocalCoachEngine {
           .fold<int>(0, (total, bill) => total + bill.amountMinor);
       return CoachReply(
         text:
-            'Your current safe-to-spend estimate is ${MoneyFormatter.amount(safeToSpendMinor)}. I started with included non-credit balances, protected ${MoneyFormatter.amount(openBills)} in unpaid bills, card obligations, your ${MoneyFormatter.amount(data.settings.safetyBufferMinor)} personal buffer, and any tighter remaining budget cap. Estimates depend on the records you entered.',
+            'Your current safe spending estimate is ${MoneyFormatter.amount(safeToSpendMinor)}. I started with the balances you chose to include, protected ${MoneyFormatter.amount(openBills)} in unpaid bills, card obligations, your ${MoneyFormatter.amount(data.settings.safetyBufferMinor)} personal buffer, and any tighter remaining budget cap. Estimates depend on the records you entered.',
       );
     }
 
@@ -188,7 +188,7 @@ class LocalCoachEngine {
       }
       return CoachReply(
         text:
-            'Your recorded expenses this month total ${MoneyFormatter.amount(monthlyExpenseMinor)}. Name a category—such as groceries, dining, or transport—and I can break it down.',
+            'Your recorded expenses this month total ${MoneyFormatter.amount(monthlyExpenseMinor)}. Name a category, such as groceries, dining, or transport, and I can break it down.',
       );
     }
 
@@ -196,7 +196,7 @@ class LocalCoachEngine {
       if (data.accounts.isEmpty) {
         return const CoachReply(
           text:
-              'No accounts exist yet, so I do not have a balance to report. Add each account with its real opening balance and choose whether it belongs in safe-to-spend.',
+              'No accounts exist yet, so I do not have a balance to report. Add each account with its real opening balance and choose whether it belongs in your safe spending amount.',
         );
       }
       return CoachReply(
@@ -211,7 +211,7 @@ class LocalCoachEngine {
       if (bills.isEmpty) {
         return const CoachReply(
           text:
-              'You have no unpaid bills recorded. Add recurring obligations so safe-to-spend can protect them before you make discretionary decisions.',
+              'You have no unpaid bills recorded. Add recurring obligations so your safe spending amount can protect them before you make other spending decisions.',
         );
       }
       final soon = bills
@@ -237,7 +237,7 @@ class LocalCoachEngine {
       final remaining = (goal.targetMinor - goal.savedMinor).clamp(0, 1 << 62);
       final rateText = monthlyIncomeMinor == 0
           ? 'A savings rate needs recorded income.'
-          : 'Your current-month savings rate is ${MoneyFormatter.percent(savingsRateBasisPoints)}.';
+          : 'Your savings rate this month is ${MoneyFormatter.percent(savingsRateBasisPoints)}.';
       return CoachReply(
         text:
             '${goal.name} has ${MoneyFormatter.amount(goal.savedMinor)} saved and ${MoneyFormatter.amount(remaining)} remaining. $rateText',
@@ -270,7 +270,7 @@ class LocalCoachEngine {
       );
       return CoachReply(
         text:
-            'I prepared a ${MoneyFormatter.amount(amount)} monthly ${category.name} guardrail. Review it below—nothing changes unless you approve.',
+            'I prepared a ${MoneyFormatter.amount(amount)} monthly ${category.name} limit. Review it below. Nothing changes unless you approve.',
         action: action,
       );
     }

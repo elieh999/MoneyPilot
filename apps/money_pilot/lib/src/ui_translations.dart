@@ -32,13 +32,13 @@ const frenchUiPhrases = <String, String>{
   'Available cash': 'Liquidités disponibles',
   'Available after protected bills, savings, reserves, card obligations, and your monthly budget cap.':
       'Disponible après les factures protégées, l’épargne, les réserves, les cartes et votre plafond budgétaire mensuel.',
-  'Based on current-month cash flow': 'Selon la trésorerie du mois en cours',
+  'Based on cash flow this month': 'Selon la trésorerie du mois en cours',
   'Bill name': 'Nom de la facture',
   'Bill reminders': 'Rappels de factures',
   'Biometric lock preference': 'Préférence de verrouillage biométrique',
   'Budget pulse': 'État des budgets',
   'Budgets': 'Budgets',
-  'Calculated only when current-month income is positive.':
+  'Calculated only when income this month is positive.':
       'Calculé uniquement lorsque le revenu du mois est positif.',
   'Cancel': 'Annuler',
   'Categories': 'Catégories',
@@ -163,7 +163,8 @@ const frenchUiPhrases = <String, String>{
   'Local data & sync': 'Données locales et synchronisation',
   'Local changes saved': 'Modifications locales enregistrées',
   'Checking sync queue…': 'Vérification de la file de synchronisation…',
-  'Device-only • saved locally': 'Appareil uniquement • enregistré localement',
+  'Stored on this device • saved locally':
+      'Enregistré localement sur cet appareil',
   'Sync demo only • data remains local':
       'Démonstration de synchronisation • les données restent locales',
   'Local user': 'Utilisateur local',
@@ -189,14 +190,14 @@ const frenchUiPhrases = <String, String>{
   'Note (optional)': 'Note (facultative)',
   'Off by default. Financial values are never included.':
       'Désactivé par défaut. Les valeurs financières ne sont jamais incluses.',
-  'Off keeps this profile device-only.':
+  'When off, this profile stays on this device.':
       'Désactivé, ce profil reste uniquement sur cet appareil.',
   'Offline model': 'Modèle hors ligne',
   'On autopay': 'Paiement automatique',
   'On track': 'Sur la bonne voie',
   'Open dashboard': 'Ouvrir la vue d’ensemble',
   'Open my empty workspace': 'Ouvrir mon espace vide',
-  'Optional cooling-off period': 'Délai de réflexion facultatif',
+  'Optional waiting period': 'Délai de réflexion facultatif',
   'Password': 'Mot de passe',
   'Password reset. You can sign in now.':
       'Mot de passe réinitialisé. Vous pouvez vous connecter.',
@@ -208,7 +209,7 @@ const frenchUiPhrases = <String, String>{
   'Positive cash flow': 'Trésorerie positive',
   'Positive current pace': 'Rythme actuel positif',
   'Privacy controls': 'Contrôles de confidentialité',
-  'Preference saved; device biometric integration is platform-dependent.':
+  'Preference saved. Biometric support depends on the device.':
       'Préférence enregistrée ; l’intégration biométrique dépend de l’appareil.',
   'Private by default': 'Privé par défaut',
   'Protected commitments': 'Engagements protégés',
@@ -243,11 +244,11 @@ const frenchUiPhrases = <String, String>{
   'System': 'Système',
   'Target amount': 'Montant cible',
   'Theme': 'Thème',
-  'This amount stays protected in every safe-to-spend calculation.':
+  'This amount stays protected in every safe spending calculation.':
       'Ce montant reste protégé dans chaque calcul du montant disponible.',
   'Text scales up to 160%, controls expose semantic labels, and keyboard navigation is supported.':
       'Le texte peut atteindre 160 %, les contrôles ont des libellés accessibles et la navigation au clavier est prise en charge.',
-  'Financial records are isolated by signed-in local profile. Export a backup before clearing important data.':
+  'Financial records are kept separate for each signed in local profile. Export a backup before clearing important data.':
       'Les données financières sont isolées par profil local connecté. Sauvegardez les informations importantes avant de les effacer.',
   'Accounts, transactions, budgets, bills, goals, and coach history will be removed. Your login and categories remain.':
       'Les comptes, transactions, budgets, factures, objectifs et l’historique du Coach seront supprimés. Votre connexion et vos catégories resteront.',
@@ -299,7 +300,7 @@ const frenchUiPhrases = <String, String>{
   'Next month': 'Mois suivant',
   'Spent on selected day': 'Dépensé le jour sélectionné',
   'Income on selected day': 'Revenus du jour sélectionné',
-  'No-spend days': 'Jours sans dépense',
+  'Days without spending': 'Jours sans dépense',
   'Busiest spending day': 'Jour de dépense le plus élevé',
   'No transactions on this day.': 'Aucune transaction ce jour-là.',
   'Color palette': 'Palette de couleurs',
@@ -349,13 +350,13 @@ const arabicUiPhrases = <String, String>{
   'Available cash': 'النقد المتاح',
   'Available after protected bills, savings, reserves, card obligations, and your monthly budget cap.':
       'المتاح بعد حماية الفواتير والمدخرات والاحتياطات والتزامات البطاقات وحد الميزانية الشهري.',
-  'Based on current-month cash flow': 'استناداً إلى التدفق النقدي لهذا الشهر',
+  'Based on cash flow this month': 'استناداً إلى التدفق النقدي لهذا الشهر',
   'Bill name': 'اسم الفاتورة',
   'Bill reminders': 'تذكيرات الفواتير',
   'Biometric lock preference': 'تفضيل القفل الحيوي',
   'Budget pulse': 'حالة الميزانيات',
   'Budgets': 'الميزانيات',
-  'Calculated only when current-month income is positive.':
+  'Calculated only when income this month is positive.':
       'يُحسب فقط عندما يكون دخل الشهر الحالي موجباً.',
   'Cancel': 'إلغاء',
   'Categories': 'الفئات',
@@ -476,7 +477,7 @@ const arabicUiPhrases = <String, String>{
   'Local data & sync': 'البيانات المحلية والمزامنة',
   'Local changes saved': 'تم حفظ التغييرات محلياً',
   'Checking sync queue…': 'جارٍ فحص قائمة المزامنة…',
-  'Device-only • saved locally': 'على الجهاز فقط • محفوظ محلياً',
+  'Stored on this device • saved locally': 'محفوظ محلياً على هذا الجهاز',
   'Sync demo only • data remains local': 'مزامنة تجريبية • تبقى البيانات محلية',
   'Local user': 'مستخدم محلي',
   'Merchant or description': 'التاجر أو الوصف',
@@ -500,14 +501,14 @@ const arabicUiPhrases = <String, String>{
   'Note (optional)': 'ملاحظة (اختياري)',
   'Off by default. Financial values are never included.':
       'متوقف افتراضياً. لا يتم تضمين القيم المالية أبداً.',
-  'Off keeps this profile device-only.':
+  'When off, this profile stays on this device.':
       'عند إيقافه يبقى هذا الملف على الجهاز فقط.',
   'Offline model': 'نموذج دون إنترنت',
   'On autopay': 'دفع تلقائي',
   'On track': 'على المسار الصحيح',
   'Open dashboard': 'فتح النظرة العامة',
   'Open my empty workspace': 'فتح مساحتي الفارغة',
-  'Optional cooling-off period': 'فترة انتظار اختيارية',
+  'Optional waiting period': 'فترة انتظار اختيارية',
   'Password': 'كلمة المرور',
   'Password reset. You can sign in now.':
       'تم تغيير كلمة المرور. يمكنك تسجيل الدخول الآن.',
@@ -519,7 +520,7 @@ const arabicUiPhrases = <String, String>{
   'Positive cash flow': 'تدفق نقدي موجب',
   'Positive current pace': 'المعدل الحالي موجب',
   'Privacy controls': 'ضوابط الخصوصية',
-  'Preference saved; device biometric integration is platform-dependent.':
+  'Preference saved. Biometric support depends on the device.':
       'تم حفظ التفضيل؛ يعتمد القفل الحيوي على إمكانات الجهاز.',
   'Private by default': 'خاص افتراضياً',
   'Protected commitments': 'الالتزامات المحمية',
@@ -553,11 +554,11 @@ const arabicUiPhrases = <String, String>{
   'System': 'النظام',
   'Target amount': 'المبلغ المستهدف',
   'Theme': 'المظهر',
-  'This amount stays protected in every safe-to-spend calculation.':
+  'This amount stays protected in every safe spending calculation.':
       'يبقى هذا المبلغ محمياً في كل حساب للمبلغ الآمن للصرف.',
   'Text scales up to 160%, controls expose semantic labels, and keyboard navigation is supported.':
       'يمكن تكبير النص حتى 160٪، وتتوفر تسميات وصول لعناصر التحكم ودعم للتنقل بلوحة المفاتيح.',
-  'Financial records are isolated by signed-in local profile. Export a backup before clearing important data.':
+  'Financial records are kept separate for each signed in local profile. Export a backup before clearing important data.':
       'السجلات المالية معزولة لكل ملف محلي مسجّل الدخول. احفظ المعلومات المهمة قبل مسحها.',
   'Accounts, transactions, budgets, bills, goals, and coach history will be removed. Your login and categories remain.':
       'سيتم حذف الحسابات والمعاملات والميزانيات والفواتير والأهداف وسجل المساعد. سيبقى تسجيل الدخول والفئات.',
@@ -606,7 +607,7 @@ const arabicUiPhrases = <String, String>{
   'Next month': 'الشهر التالي',
   'Spent on selected day': 'مصروفات اليوم المحدد',
   'Income on selected day': 'دخل اليوم المحدد',
-  'No-spend days': 'أيام بلا مصروفات',
+  'Days without spending': 'أيام بلا مصروفات',
   'Busiest spending day': 'أعلى يوم مصروفات',
   'No transactions on this day.': 'لا توجد معاملات في هذا اليوم.',
   'Color palette': 'لوحة الألوان',

@@ -105,7 +105,7 @@ class TransactionCsvCodec {
       final problems = <String>[
         if (date == null) 'invalid date',
         if (title.isEmpty) 'missing description',
-        if (amount == null) 'invalid non-zero amount',
+        if (amount == null) 'amount must not be zero',
         if (accountId == null) 'unknown account',
         if (categoryId == null) 'unknown category',
         if (pending == null) 'invalid pending value',

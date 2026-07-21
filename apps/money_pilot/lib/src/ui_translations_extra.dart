@@ -1,4 +1,6 @@
 const frenchUiPhrasesExtra = <String, String>{
+  'API login failed • invalid response':
+      'Échec de la connexion à l’API • réponse incorrecte',
   'API address': 'Adresse de l’API',
   'API connection checks': 'Vérifications de connexion à l’API',
   'API passwords and session tokens are never saved to disk.':
@@ -9,18 +11,32 @@ const frenchUiPhrasesExtra = <String, String>{
   'Connect API account': 'Connecter un compte API',
   'Connect to a running MoneyPilot API. This verifies your account session; financial records stay local.':
       'Connectez-vous à une API MoneyPilot active. La session du compte est vérifiée et les données financières restent locales.',
+  'Cash forecast for six months': 'Prévision de trésorerie sur six mois',
+  'Check a purchase without being told what to do.':
+      'Vérifiez un achat sans recevoir d’ordre.',
   'Copy transactions as CSV': 'Copier les transactions au format CSV',
   'CSV data': 'Données CSV',
   'Export CSV': 'Exporter en CSV',
-  'Financial records are encrypted and isolated by signed-in local profile. API passwords and session tokens are never saved to disk.':
+  'Financial records are encrypted and kept separate for each signed in local profile. API passwords and session tokens are never saved to disk.':
       'Les données financières sont chiffrées et isolées par profil local connecté. Les mots de passe API et les jetons de session ne sont jamais enregistrés sur le disque.',
   'Import CSV': 'Importer un CSV',
   'Import transactions from CSV': 'Importer des transactions depuis un CSV',
+  'MoneyPilot will compare it with your safe spending amount and show the calculation.':
+      'MoneyPilot le comparera à votre montant disponible et affichera le calcul.',
   'Monthly': 'Mensuel',
   'next': 'prochaine date',
   'occurrences': 'occurrences',
   'Recurring activity': 'Activité récurrente',
+  'Too many attempts. Signing in is locked for 30 seconds.':
+      'Trop de tentatives. La connexion est bloquée pendant 30 secondes.',
+  'Stored on this device • encrypted locally':
+      'Stocké sur cet appareil • chiffré localement',
   'Weekly': 'Hebdomadaire',
+  'When off, this profile stays on this device. Financial upload is not enabled.':
+      'Lorsque cette option est désactivée, le profil reste sur cet appareil. L’envoi des données financières n’est pas activé.',
+  'Your money.\nNo invented numbers.': 'Votre argent.\nAucun chiffre inventé.',
+  'Your money.\nNo invented numbers.\nNo financial shaming.':
+      'Votre argent.\nAucun chiffre inventé.\nAucun jugement financier.',
   'Add a category guardrail to start planning.':
       'Ajoutez un budget de catégorie pour commencer à planifier.',
   'Add only the financial records you choose':
@@ -44,10 +60,10 @@ const frenchUiPhrasesExtra = <String, String>{
       'Analyses déterministes calculées à partir de vos données locales.',
   'Discuss with AI Coach': 'Discuter avec le Coach IA',
   'Due in 14 days': 'Échéance dans 14 jours',
-  'Educational estimate—not financial, tax, investment, or legal advice.':
+  'This is an educational estimate, not financial, tax, investment, or legal advice.':
       'Estimation éducative, et non conseil financier, fiscal, juridique ou en investissement.',
   'Explain my safe to spend': 'Expliquer mon montant disponible',
-  'Keep balances and safe-to-spend inclusion rules transparent.':
+  'See which balances are included in your safe spending amount.':
       'Gardez les soldes et les règles d’inclusion du montant disponible transparents.',
   'Keep it visibly provisional.': 'La garder visiblement provisoire.',
   'MoneyPilot uses integer cents and the more conservative of liquidity and remaining discretionary budgets.':
@@ -76,18 +92,20 @@ const frenchUiPhrasesExtra = <String, String>{
       'C’est le seul moyen de réinitialiser un mot de passe local. Conservez-le en lieu sûr ; MoneyPilot ne pourra pas le réafficher.',
   'This planning estimate is not financial advice. Review account inclusion and upcoming commitments when your situation changes.':
       'Cette estimation de planification n’est pas un conseil financier. Vérifiez les comptes inclus et les engagements à venir lorsque votre situation change.',
-  'The purchase exceeds your current allowance. There is not enough recorded monthly surplus to estimate a catch-up date.':
+  'The purchase exceeds your current allowance. There is not enough recorded monthly surplus to estimate when the difference could be covered.':
       'L’achat dépasse votre montant disponible. L’excédent mensuel enregistré est insuffisant pour estimer une date de rattrapage.',
-  'Turn longer-term plans into visible, manageable milestones.':
+  'Turn long term plans into clear, manageable milestones.':
       'Transformez vos projets à long terme en objectifs visibles et réalisables.',
   'What bills are coming up?': 'Quelles factures arrivent bientôt ?',
   'What can you help me with?': 'Comment peux-tu m’aider ?',
   'Your estimate remains zero until you add your own accounts and obligations.':
       'Votre estimation reste à zéro jusqu’à l’ajout de vos comptes et obligations.',
-  'Your safe-to-spend breakdown': 'Détail de votre montant disponible',
+  'Your safe spending breakdown': 'Détail de votre montant disponible',
 };
 
 const arabicUiPhrasesExtra = <String, String>{
+  'API login failed • invalid response':
+      'فشل تسجيل الدخول إلى API • استجابة غير صحيحة',
   'API address': 'عنوان واجهة API',
   'API connection checks': 'فحوصات الاتصال بواجهة API',
   'API passwords and session tokens are never saved to disk.':
@@ -98,18 +116,32 @@ const arabicUiPhrasesExtra = <String, String>{
   'Connect API account': 'ربط حساب API',
   'Connect to a running MoneyPilot API. This verifies your account session; financial records stay local.':
       'اتصل بواجهة MoneyPilot API قيد التشغيل للتحقق من جلسة الحساب، مع إبقاء السجلات المالية محلياً.',
+  'Cash forecast for six months': 'توقع التدفق النقدي لستة أشهر',
+  'Check a purchase without being told what to do.':
+      'تحقق من عملية شراء من دون أن يملي عليك التطبيق قراراً.',
   'Copy transactions as CSV': 'نسخ المعاملات بصيغة CSV',
   'CSV data': 'بيانات CSV',
   'Export CSV': 'تصدير CSV',
-  'Financial records are encrypted and isolated by signed-in local profile. API passwords and session tokens are never saved to disk.':
+  'Financial records are encrypted and kept separate for each signed in local profile. API passwords and session tokens are never saved to disk.':
       'السجلات المالية مشفرة ومعزولة حسب الملف المحلي المسجل. لا يتم حفظ كلمات مرور API أو رموز الجلسة على القرص.',
   'Import CSV': 'استيراد CSV',
   'Import transactions from CSV': 'استيراد المعاملات من CSV',
+  'MoneyPilot will compare it with your safe spending amount and show the calculation.':
+      'سيقارن MoneyPilot المبلغ بالمبلغ الآمن للصرف ويعرض طريقة الحساب.',
   'Monthly': 'شهري',
   'next': 'الموعد التالي',
   'occurrences': 'مرات',
   'Recurring activity': 'النشاط المتكرر',
+  'Too many attempts. Signing in is locked for 30 seconds.':
+      'محاولات كثيرة. تم إيقاف تسجيل الدخول لمدة 30 ثانية.',
+  'Stored on this device • encrypted locally':
+      'محفوظ على هذا الجهاز • مشفر محلياً',
   'Weekly': 'أسبوعي',
+  'When off, this profile stays on this device. Financial upload is not enabled.':
+      'عند إيقاف هذا الخيار يبقى الملف على هذا الجهاز. رفع البيانات المالية غير مفعّل.',
+  'Your money.\nNo invented numbers.': 'أموالك.\nلا أرقام مخترعة.',
+  'Your money.\nNo invented numbers.\nNo financial shaming.':
+      'أموالك.\nلا أرقام مخترعة.\nلا أحكام على قراراتك المالية.',
   'Add a category guardrail to start planning.':
       'أضف ميزانية لفئة كي تبدأ التخطيط.',
   'Add only the financial records you choose':
@@ -132,10 +164,10 @@ const arabicUiPhrasesExtra = <String, String>{
       'تحليلات دقيقة محسوبة من بياناتك المحلية.',
   'Discuss with AI Coach': 'مناقشة مع المساعد المالي',
   'Due in 14 days': 'الاستحقاق خلال 14 يوماً',
-  'Educational estimate—not financial, tax, investment, or legal advice.':
+  'This is an educational estimate, not financial, tax, investment, or legal advice.':
       'تقدير تعليمي وليس نصيحة مالية أو ضريبية أو استثمارية أو قانونية.',
   'Explain my safe to spend': 'اشرح المبلغ الآمن للصرف',
-  'Keep balances and safe-to-spend inclusion rules transparent.':
+  'See which balances are included in your safe spending amount.':
       'حافظ على وضوح الأرصدة وقواعد إدراجها في المبلغ الآمن للصرف.',
   'Keep it visibly provisional.': 'أبقها ظاهرة كمعاملة مؤقتة.',
   'MoneyPilot uses integer cents and the more conservative of liquidity and remaining discretionary budgets.':
@@ -163,13 +195,13 @@ const arabicUiPhrasesExtra = <String, String>{
       'هذه هي الطريقة الوحيدة لإعادة تعيين كلمة المرور المحلية. احفظ الرمز في مكان خاص لأن MoneyPilot لا يستطيع عرضه مجدداً.',
   'This planning estimate is not financial advice. Review account inclusion and upcoming commitments when your situation changes.':
       'هذا التقدير للتخطيط وليس نصيحة مالية. راجع الحسابات المشمولة والالتزامات القادمة عندما تتغير ظروفك.',
-  'The purchase exceeds your current allowance. There is not enough recorded monthly surplus to estimate a catch-up date.':
+  'The purchase exceeds your current allowance. There is not enough recorded monthly surplus to estimate when the difference could be covered.':
       'يتجاوز الشراء المبلغ المتاح حالياً، ولا يوجد فائض شهري مسجل كافٍ لتقدير موعد تغطية الفرق.',
-  'Turn longer-term plans into visible, manageable milestones.':
+  'Turn long term plans into clear, manageable milestones.':
       'حوّل خططك طويلة الأجل إلى أهداف واضحة وقابلة للإدارة.',
   'What bills are coming up?': 'ما الفواتير القادمة؟',
   'What can you help me with?': 'بماذا يمكنك مساعدتي؟',
   'Your estimate remains zero until you add your own accounts and obligations.':
       'يبقى التقدير صفراً حتى تضيف حساباتك والتزاماتك.',
-  'Your safe-to-spend breakdown': 'تفصيل المبلغ الآمن للصرف',
+  'Your safe spending breakdown': 'تفصيل المبلغ الآمن للصرف',
 };

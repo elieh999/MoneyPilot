@@ -106,19 +106,21 @@ class DioSyncGateway {
       );
       _accessToken = response.data?['access_token'] as String?;
       if (_accessToken == null || _accessToken!.isEmpty) {
-        return 'API sign-in failed • invalid response';
+        return 'API login failed • invalid response';
       }
       return 'API connected • session active';
     } on DioException catch (error) {
       _accessToken = null;
-      return _friendlyApiError(error, action: 'API sign-in failed');
+      return _friendlyApiError(error, action: 'API login failed');
     }
   }
 
   void disconnect() => _accessToken = null;
 
   Future<String> sync(AppData data) async {
-    if (!data.settings.cloudSync) return 'Device-only • encrypted locally';
+    if (!data.settings.cloudSync) {
+      return 'Stored on this device • encrypted locally';
+    }
     final endpoint = _normalizeBaseUrl(data.settings.apiBaseUrl);
     try {
       await _client.get<Map<String, dynamic>>(

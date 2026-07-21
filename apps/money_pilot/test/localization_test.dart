@@ -30,6 +30,12 @@ void main() {
       'Electric cyan',
       'Deep forest',
       'Glow effects',
+      'See which balances are included in your safe spending amount.',
+      'Days without spending',
+      'Check a purchase without being told what to do.',
+      'Cash forecast for six months',
+      'Stored on this device • encrypted locally',
+      'When off, this profile stays on this device. Financial upload is not enabled.',
     ];
 
     for (final phrase in required) {

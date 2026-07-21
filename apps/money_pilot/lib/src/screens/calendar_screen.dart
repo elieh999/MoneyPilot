@@ -78,14 +78,14 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 accent: const Color(0xFF18875C),
               ),
               MetricCard(
-                label: 'No-spend days',
+                label: 'Days without spending',
                 value: '${insights.noSpendDays}',
                 icon: Icons.savings_outlined,
               ),
               MetricCard(
                 label: 'Busiest spending day',
                 value: insights.busiestDay == null
-                    ? '—'
+                    ? '0'
                     : MaterialLocalizations.of(
                         context,
                       ).formatMediumDate(insights.busiestDay!.date),

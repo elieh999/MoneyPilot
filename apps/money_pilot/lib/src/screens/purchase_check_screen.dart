@@ -34,7 +34,7 @@ class _PurchaseCheckScreenState extends ConsumerState<PurchaseCheckScreen> {
     final controller = ref.read(appControllerProvider.notifier);
     return PageFrame(
       title: 'Smart purchase check',
-      subtitle: 'Pressure-test a purchase without being told what to do.',
+      subtitle: 'Check a purchase without being told what to do.',
       child: LayoutBuilder(
         builder: (context, constraints) {
           final form = _buildForm(context);
@@ -84,7 +84,7 @@ class _PurchaseCheckScreenState extends ConsumerState<PurchaseCheckScreen> {
         ),
         const SizedBox(height: 18),
         AppText(
-          'Optional cooling-off period',
+          'Optional waiting period',
           style: Theme.of(
             context,
           ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w800),
@@ -128,7 +128,7 @@ class _PurchaseCheckScreenState extends ConsumerState<PurchaseCheckScreen> {
           icon: Icons.balance_outlined,
           title: 'Enter a real price',
           message:
-              'MoneyPilot will compare it with your safe-to-spend amount and show the calculation.',
+              'MoneyPilot will compare it with your safe spending amount and show the calculation.',
         ),
       );
     }
@@ -194,9 +194,9 @@ class _PurchaseCheckScreenState extends ConsumerState<PurchaseCheckScreen> {
           const SizedBox(height: 18),
           AppText(
             fits
-                ? 'The purchase fits the records you entered. Your selected $_coolingDays-day pause ends on ${DateFormats.medium.format(DateTime.now().add(Duration(days: _coolingDays)))}.'
+                ? 'The purchase fits the records you entered. Your $_coolingDays day pause ends on ${DateFormats.medium.format(DateTime.now().add(Duration(days: _coolingDays)))}.'
                 : waitDays == null
-                ? 'The purchase exceeds your current allowance. There is not enough recorded monthly surplus to estimate a catch-up date.'
+                ? 'The purchase exceeds your current allowance. There is not enough recorded monthly surplus to estimate when the difference could be covered.'
                 : 'At the current recorded monthly surplus, closing the gap would take roughly $waitDays day${waitDays == 1 ? '' : 's'}.',
           ),
           const SizedBox(height: 18),
@@ -214,7 +214,7 @@ class _PurchaseCheckScreenState extends ConsumerState<PurchaseCheckScreen> {
           ),
           const SizedBox(height: 14),
           AppText(
-            'Educational estimate—not financial, tax, investment, or legal advice.',
+            'This is an educational estimate, not financial, tax, investment, or legal advice.',
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],

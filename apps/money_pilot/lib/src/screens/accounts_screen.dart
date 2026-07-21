@@ -15,7 +15,7 @@ class AccountsScreen extends ConsumerWidget {
     final controller = ref.read(appControllerProvider.notifier);
     return PageFrame(
       title: 'Accounts',
-      subtitle: 'Keep balances and safe-to-spend inclusion rules transparent.',
+      subtitle: 'See which balances are included in your safe spending amount.',
       actions: [
         FilledButton.icon(
           onPressed: () => showAccountEditor(context),
