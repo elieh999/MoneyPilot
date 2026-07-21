@@ -42,11 +42,11 @@ financial records yet.
 ## Start on Windows
 
 Download the repository as a ZIP, extract the whole folder, and double click
-`MoneyPilot.exe` in the main project folder. The included Windows build does not
+`MoneyPilot.exe` in the top level folder. The included Windows build does not
 require Flutter, Python, Docker, or PowerShell.
 
 Keep `MoneyPilot.exe` beside the `MoneyPilot Runtime` folder. Windows SmartScreen
-may ask for confirmation because this public development build is not code
+may ask for confirmation because this open source development build is not code
 signed yet.
 
 ## Run from source
@@ -66,7 +66,7 @@ Start the Flutter client in another terminal:
 ```
 
 Docker Desktop is optional for the first local run. The API can use SQLite for
-development, and the Flutter client can run without the API. See
+development, and the Flutter client can run without the API. see
 [Development](docs/DEVELOPMENT.md) for Docker commands, manual setup, and common
 problems.
 
