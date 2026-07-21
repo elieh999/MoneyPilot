@@ -10,7 +10,7 @@ is normalized.
 
 Public schemas never accept authoritative owner, audit, approval, or revision
 fields. Foreign keys and service policies preserve financial history. A user
-deletion workflow, not ad-hoc cascades, controls erasure.
+deletion workflow, rather than informal cascades, controls erasure.
 
 ## Entity groups
 
@@ -21,15 +21,15 @@ deletion workflow, not ad-hoc cascades, controls erasure.
   rules, tags, transaction tags.
 - **Planning:** income sources, salary plans/deductions/allocations, budgets,
   periods and category lines, bills and occurrences, goals and contributions,
-  emergency-fund configuration.
+  emergency fund configuration.
 - **Advanced finance:** subscriptions and price history, debts and payments,
-  assets, net-worth snapshots, forecast scenarios and points, exchange rates.
-- **Operations:** sync operations, per-user server revisions, audit logs,
+  assets, net worth snapshots, forecast scenarios and points, exchange rates.
+- **Operations:** sync operations, server revisions for each user, audit logs,
   notifications/preferences, imports/rows, exports, receipts/items, user files.
 - **AI:** conversations, messages, tool calls, action proposals/approvals,
   memories, insights, evidence, and feedback.
 
-## MVP ERD
+## Current data map
 
 ```mermaid
 erDiagram
@@ -112,33 +112,33 @@ erDiagram
 
 ## Ledger decisions
 
-- Amounts are non-negative magnitudes; transaction `kind` determines direction.
-  This avoids ambiguous mixed-sign APIs. Refunds reduce the original expense
+- Amounts are zero or greater; transaction `kind` determines direction.
+  This avoids ambiguous APIs with mixed signs. Refunds reduce the original expense
   category when linked; otherwise they are reported as unallocated refunds, not
   salary/income.
 - A transfer is two linked account legs sharing `transfer_group_id`, written in
-  one transaction. Cross-currency transfers retain source amount, destination
+  one transaction. Transfers between currencies retain source amount, destination
   amount, currencies, and applied rate.
 - Account balance is derived from opening balance plus posted ledger entries.
   Cached/snapshot balances include an `as_of_revision`; reconciliation creates
   an explicit adjustment rather than rewriting history.
 - Split totals must equal the parent amount in the same currency. Rounding
-  remainder is assigned deterministically to the last user-visible split.
-- Pending entries affect available-balance policy but not finalized reports.
+  remainder is assigned consistently to the last visible split.
+- Pending entries affect available balance policy but not finalized reports.
 
 ## Constraints and indexes
 
 - Unique normalized email; unique `(owner_id, device_id, refresh_token_family)`;
   unique `(owner_id, operation_id)` and import row fingerprint per import.
-- Checks for valid currency/scale, non-negative magnitudes, valid date ranges,
+- Checks for valid currency and scale, amounts of zero or greater, valid date ranges,
   supported entity states, and exactly two balanced transfer legs.
-- Owner/date indexes on transactions; owner/status/due-date indexes on bills;
+- Owner and date indexes on transactions; owner, status, and due date indexes on bills;
   owner/deleted/version indexes for sync; expiry indexes on sessions, proposals,
   exports, and upload reservations.
 - Partial indexes should exclude tombstoned rows for ordinary queries while
-  preserving tombstones until all active-device retention windows pass.
+  preserving tombstones until all active device retention windows pass.
 
-## Later household boundary
+## Possible household support
 
 Future sharing introduces `workspace`, `workspace_member`, and scoped roles.
 Until that migration exists, `owner_id` is always the authenticated user. Do not

@@ -27,7 +27,7 @@ layouts.
 
 Local users, password hashes, recovery code hashes, settings, and financial
 snapshots are stored through `shared_preferences`. Each profile has a random
-256-bit data key and its snapshot is protected by authenticated AES-GCM
+256 bit data key and its snapshot is protected by authenticated AES-GCM
 encryption. Older plaintext snapshots are encrypted on their next successful
 load.
 
@@ -53,7 +53,7 @@ checked by the test suite.
 ## Shared financial rules
 
 Python calculation helpers live in `packages/financial_core_python`. Language
-neutral examples in `packages/financial_contracts/vectors.json` are exercised by
+shared examples in `packages/financial_contracts/vectors.json` are exercised by
 both the Python and Flutter test suites. This catches differences in rounding,
 budget status, savings rate, and safe to spend calculations.
 
@@ -63,12 +63,12 @@ budget status, savings rate, and safe to spend calculations.
 and the API for local development. Redis, MinIO, and Mailpit are available to
 support future integrations; they are not authoritative financial storage.
 
-## Boundaries to keep visible
+## Known limits
 
 - Flutter local profiles and API accounts are separate identities.
-- The client can create an in-memory API session and verify `/auth/me`.
+- The client can create a temporary API session and verify `/auth/me`.
 - The Flutter sync gateway does not transmit financial data.
-- The local coach and API provider are deterministic by default.
+- The local coach and API provider are rule based by default.
 - No production hosting configuration is included.
 - Local snapshots are encrypted, but keys are not hardware backed.
 

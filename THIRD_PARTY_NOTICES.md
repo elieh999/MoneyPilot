@@ -1,6 +1,6 @@
-# Third-party notices
+# Third party notices
 
-MoneyPilot depends on open-source libraries declared in its Python and Flutter
+MoneyPilot depends on open source libraries declared in its Python and Flutter
 package manifests. Those libraries are resolved by the package managers and are
 not copied into this source repository. Their own license terms continue to
 apply.
@@ -34,6 +34,6 @@ Flutter is distributed under the BSD 3-Clause License.
 
 ## Application assets
 
-The MoneyPilot icons, screenshots, and golden-test images in this repository
-are project assets. No external stock photography or third-party datasets were
+The MoneyPilot icons, screenshots, and visual test images in this repository
+are project assets. No external stock photography or third party datasets were
 identified during the publication audit.

@@ -41,12 +41,12 @@ financial records yet.
 
 ## Start on Windows
 
-Download the repository as a ZIP, extract the whole folder, and double-click
-`MoneyPilot.exe` in the top-level folder. The included Windows build does not
+Download the repository as a ZIP, extract the whole folder, and double click
+`MoneyPilot.exe` in the main project folder. The included Windows build does not
 require Flutter, Python, Docker, or PowerShell.
 
 Keep `MoneyPilot.exe` beside the `MoneyPilot Runtime` folder. Windows SmartScreen
-may ask for confirmation because this open-source development build is not code
+may ask for confirmation because this public development build is not code
 signed yet.
 
 ## Run from source
@@ -109,7 +109,7 @@ and Flutter tests when those tools are installed.
 - Flutter local profiles and optional FastAPI accounts remain separate identities.
 - Remote AI providers are not configured by default.
 - The local encryption key is stored separately in app preferences, not in a
-  platform hardware-backed key store.
+  hardware protected key store.
 - Store signing, hosted infrastructure, and production monitoring are not part of
   this repository yet.
 
