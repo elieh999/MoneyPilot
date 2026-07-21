@@ -59,16 +59,17 @@ jobs:
       - name: Package double-click application
         shell: pwsh
         run: |
-          $root = Resolve-Path "../.."
+          $root = (Resolve-Path "../..").Path
           $package = Join-Path (Resolve-Path "build/windows") "package"
           $runtime = Join-Path $package "MoneyPilot Runtime"
           New-Item -ItemType Directory -Force -Path $runtime | Out-Null
           Copy-Item "build/windows/x64/runner/Release/*" $runtime -Recurse -Force
           $compiler = Join-Path $env:WINDIR "Microsoft.NET/Framework64/v4.0.30319/csc.exe"
+          $icon = Join-Path $root "apps\money_pilot\windows\runner\resources\app_icon.ico"
+          $output = Join-Path $package "MoneyPilot.exe"
+          $source = Join-Path $root "tools\windows_launcher\MoneyPilotLauncher.cs"
           & $compiler /nologo /target:winexe /optimize+ `
-            /win32icon:"$root/apps/money_pilot/windows/runner/resources/app_icon.ico" `
-            /out:"$package/MoneyPilot.exe" `
-            "$root/tools/windows_launcher/MoneyPilotLauncher.cs"
+            "/win32icon:$icon" "/out:$output" $source
           if ($LASTEXITCODE -ne 0) { throw "Launcher compilation failed." }
       - name: Smoke launch packaged application
         shell: pwsh
