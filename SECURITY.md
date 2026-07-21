@@ -21,8 +21,10 @@ safe proof of concept. Never include a real data export or user credentials.
   account snapshots, or captured API tokens.
 - Production API startup rejects missing, short, or obvious placeholder JWT
   secrets.
-- The desktop application stores profile data on the device. The current
-  financial snapshot is not database level encrypted, so use operating system
-  disk encryption and a protected user account.
+- The Windows application protects each local financial snapshot with
+  authenticated AES-GCM encryption. Its random data key is stored separately in
+  the same application preferences, not in a hardware-backed key store. Use
+  operating system disk encryption and a protected user account as an
+  additional safeguard.
 - Hosted deployment, backup, monitoring, and incident response are not provided
   by this repository.

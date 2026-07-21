@@ -27,6 +27,13 @@ From the repository root:
 .\scripts\setup-dev.ps1
 ```
 
+If Windows blocks local PowerShell scripts, run the command in a one-time bypass
+process instead of changing the machine-wide policy:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\setup-dev.ps1
+```
+
 The setup script creates `.env` from `.env.example` when needed, creates a
 Python virtual environment, installs API dependencies, and runs `flutter pub
 get`. The values in `.env.example` are for local development only.
@@ -107,6 +114,12 @@ covers these files.
 - If Python is not found, install Python 3.12 and reopen PowerShell.
 - If Flutter reports no desktop device, enable the target platform and install
   its native build tools.
+- If Flutter cannot delete `build` or `.plugin_symlinks` inside a OneDrive
+  folder, pause OneDrive synchronization or move a development checkout to a
+  normal local folder. Generated Flutter directories can become read-only
+  reparse points while OneDrive manages them.
+- If PowerShell says script execution is disabled, use the one-time
+  `-ExecutionPolicy Bypass` command shown above.
 - If port 8000 is busy, stop the earlier API process or change
   `MONEY_PILOT_API_PORT` in the local environment.
 - If the API cannot reach PostgreSQL, use `-SQLite` or start Docker Desktop.
