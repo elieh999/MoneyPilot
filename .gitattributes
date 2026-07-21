@@ -8,3 +8,7 @@
 *.jar binary
 *.jpg binary
 *.png binary
+*.dll binary
+*.exe binary
+*.so binary
+*.dat binary

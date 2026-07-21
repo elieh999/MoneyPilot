@@ -56,16 +56,32 @@ jobs:
         run: flutter pub get
       - name: Build release
         run: flutter build windows --release
-      - name: Smoke launch
+      - name: Package double-click application
         shell: pwsh
         run: |
-          $exe = Resolve-Path "build/windows/x64/runner/Release/money_pilot.exe"
-          $process = Start-Process -FilePath $exe -PassThru
+          $root = Resolve-Path "../.."
+          $package = Join-Path (Resolve-Path "build/windows") "package"
+          $runtime = Join-Path $package "MoneyPilot Runtime"
+          New-Item -ItemType Directory -Force -Path $runtime | Out-Null
+          Copy-Item "build/windows/x64/runner/Release/*" $runtime -Recurse -Force
+          $compiler = Join-Path $env:WINDIR "Microsoft.NET/Framework64/v4.0.30319/csc.exe"
+          & $compiler /nologo /target:winexe /optimize+ `
+            /win32icon:"$root/apps/money_pilot/windows/runner/resources/app_icon.ico" `
+            /out:"$package/MoneyPilot.exe" `
+            "$root/tools/windows_launcher/MoneyPilotLauncher.cs"
+          if ($LASTEXITCODE -ne 0) { throw "Launcher compilation failed." }
+      - name: Smoke launch packaged application
+        shell: pwsh
+        run: |
+          $package = Join-Path (Resolve-Path "build/windows") "package"
+          $launcher = Join-Path $package "MoneyPilot.exe"
+          Start-Process -FilePath $launcher -WorkingDirectory $package
           Start-Sleep -Seconds 8
-          if ($process.HasExited) { throw "MoneyPilot exited during smoke launch." }
-          Stop-Process -Id $process.Id
+          $application = Get-Process -Name "MoneyPilot" -ErrorAction SilentlyContinue
+          if ($null -eq $application) { throw "MoneyPilot exited during smoke launch." }
+          $application | Stop-Process
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: MoneyPilot-Windows
-          path: apps/money_pilot/build/windows/x64/runner/Release/
+          name: MoneyPilot-Windows-Double-Click
+          path: apps/money_pilot/build/windows/package/
           if-no-files-found: error
