@@ -1,4 +1,26 @@
 const frenchUiPhrasesExtra = <String, String>{
+  'API address': 'Adresse de l’API',
+  'API connection checks': 'Vérifications de connexion à l’API',
+  'API passwords and session tokens are never saved to disk.':
+      'Les mots de passe API et les jetons de session ne sont jamais enregistrés sur le disque.',
+  'Cancel': 'Annuler',
+  'Check API': 'Vérifier l’API',
+  'Connect': 'Connecter',
+  'Connect API account': 'Connecter un compte API',
+  'Connect to a running MoneyPilot API. This verifies your account session; financial records stay local.':
+      'Connectez-vous à une API MoneyPilot active. La session du compte est vérifiée et les données financières restent locales.',
+  'Copy transactions as CSV': 'Copier les transactions au format CSV',
+  'CSV data': 'Données CSV',
+  'Export CSV': 'Exporter en CSV',
+  'Financial records are encrypted and isolated by signed-in local profile. API passwords and session tokens are never saved to disk.':
+      'Les données financières sont chiffrées et isolées par profil local connecté. Les mots de passe API et les jetons de session ne sont jamais enregistrés sur le disque.',
+  'Import CSV': 'Importer un CSV',
+  'Import transactions from CSV': 'Importer des transactions depuis un CSV',
+  'Monthly': 'Mensuel',
+  'next': 'prochaine date',
+  'occurrences': 'occurrences',
+  'Recurring activity': 'Activité récurrente',
+  'Weekly': 'Hebdomadaire',
   'Add a category guardrail to start planning.':
       'Ajoutez un budget de catégorie pour commencer à planifier.',
   'Add only the financial records you choose':
@@ -66,6 +88,28 @@ const frenchUiPhrasesExtra = <String, String>{
 };
 
 const arabicUiPhrasesExtra = <String, String>{
+  'API address': 'عنوان واجهة API',
+  'API connection checks': 'فحوصات الاتصال بواجهة API',
+  'API passwords and session tokens are never saved to disk.':
+      'لا يتم حفظ كلمات مرور API أو رموز الجلسة على القرص.',
+  'Cancel': 'إلغاء',
+  'Check API': 'فحص واجهة API',
+  'Connect': 'اتصال',
+  'Connect API account': 'ربط حساب API',
+  'Connect to a running MoneyPilot API. This verifies your account session; financial records stay local.':
+      'اتصل بواجهة MoneyPilot API قيد التشغيل للتحقق من جلسة الحساب، مع إبقاء السجلات المالية محلياً.',
+  'Copy transactions as CSV': 'نسخ المعاملات بصيغة CSV',
+  'CSV data': 'بيانات CSV',
+  'Export CSV': 'تصدير CSV',
+  'Financial records are encrypted and isolated by signed-in local profile. API passwords and session tokens are never saved to disk.':
+      'السجلات المالية مشفرة ومعزولة حسب الملف المحلي المسجل. لا يتم حفظ كلمات مرور API أو رموز الجلسة على القرص.',
+  'Import CSV': 'استيراد CSV',
+  'Import transactions from CSV': 'استيراد المعاملات من CSV',
+  'Monthly': 'شهري',
+  'next': 'الموعد التالي',
+  'occurrences': 'مرات',
+  'Recurring activity': 'النشاط المتكرر',
+  'Weekly': 'أسبوعي',
   'Add a category guardrail to start planning.':
       'أضف ميزانية لفئة كي تبدأ التخطيط.',
   'Add only the financial records you choose':

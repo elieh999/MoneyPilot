@@ -553,8 +553,9 @@ class _PrivacyCard extends StatelessWidget {
           ),
           _SettingSwitch(
             icon: Icons.cloud_outlined,
-            title: 'Cloud sync preference',
-            subtitle: 'Off keeps this profile device-only.',
+            title: 'API connection checks',
+            subtitle:
+                'Off keeps this profile device-only. Financial upload is not enabled.',
             value: settings.cloudSync,
             onChanged: (value) =>
                 onChanged(settings.copyWith(cloudSync: value)),
@@ -659,7 +660,12 @@ class _DataCard extends ConsumerWidget {
               FilledButton.icon(
                 onPressed: controller.syncNow,
                 icon: const Icon(Icons.sync),
-                label: const AppText('Check sync queue'),
+                label: const AppText('Check API'),
+              ),
+              OutlinedButton.icon(
+                onPressed: () => _showApiLogin(context, ref),
+                icon: const Icon(Icons.cloud_done_outlined),
+                label: const AppText('Connect API account'),
               ),
               OutlinedButton.icon(
                 key: const Key('clear-financial-data-button'),
@@ -671,12 +677,92 @@ class _DataCard extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           AppText(
-            'Financial records are isolated by signed-in local profile. Export a backup before clearing important data.',
+            'Financial records are encrypted and isolated by signed-in local profile. API passwords and session tokens are never saved to disk.',
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _showApiLogin(BuildContext context, WidgetRef ref) async {
+    final endpoint = TextEditingController(text: data.settings.apiBaseUrl);
+    final email = TextEditingController();
+    final password = TextEditingController();
+    try {
+      final connect = await showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const AppText('Connect API account'),
+          content: SizedBox(
+            width: 480,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const AppText(
+                  'Connect to a running MoneyPilot API. This verifies your account session; financial records stay local.',
+                ),
+                const SizedBox(height: 14),
+                TextField(
+                  controller: endpoint,
+                  keyboardType: TextInputType.url,
+                  decoration: InputDecoration(
+                    labelText: context.l10n.translate('API address'),
+                    prefixIcon: const Icon(Icons.link),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: email,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    labelText: context.l10n.translate('Email'),
+                    prefixIcon: const Icon(Icons.email_outlined),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: password,
+                  obscureText: true,
+                  onSubmitted: (_) => Navigator.pop(context, true),
+                  decoration: InputDecoration(
+                    labelText: context.l10n.translate('Password'),
+                    prefixIcon: const Icon(Icons.lock_outline),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const AppText('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const AppText('Connect'),
+            ),
+          ],
+        ),
+      );
+      if (connect != true || !context.mounted) return;
+      final result = await ref
+          .read(appControllerProvider.notifier)
+          .connectApi(
+            baseUrl: endpoint.text,
+            email: email.text,
+            password: password.text,
+          );
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: AppText(result)));
+      }
+    } finally {
+      endpoint.dispose();
+      email.dispose();
+      password.dispose();
+    }
   }
 
   Future<void> _confirmClear(BuildContext context, WidgetRef ref) async {
