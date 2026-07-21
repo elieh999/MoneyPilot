@@ -1,21 +1,17 @@
-# MoneyPilot AI Flutter client
+# MoneyPilot Flutter client
 
-The responsive client runs on mobile, desktop, and web. Every new local profile
-starts with an empty financial workspace. Local authentication includes Argon2id
-password hashing, recovery-code reset, failure lockout, logout, and account
-deletion. Records are isolated by profile.
+This directory contains the Flutter application for desktop and mobile.
 
-The private Local Coach works offline and answers conversational questions from
-the accounts, transactions, bills, budgets, and goals the user has entered. It
-does not invent missing balances. Budget changes are typed drafts that require an
-explicit approval. The Purchase Check screen compares a planned purchase with
-the current safe-to-spend result and a user-selected cooling-off date.
+New profiles start with no financial records. Local authentication supports
+password hashing, recovery codes, sign in lockout, sign out, and account
+deletion. Each profile has a separate locally stored workspace.
 
-English, French, and Arabic are built in. Arabic uses right-to-left layout and a
-bundled Noto Sans Arabic font. The Local Coach recognizes typed questions and
-amounts in all three languages, including Arabic-Indic digits.
+The interface includes accounts, transactions, budgets, bills, goals, reports,
+purchase checks, calendar summaries, appearance settings, and a local financial
+coach. English, French, and Arabic are built in. Arabic switches the layout to
+right to left and uses the bundled Noto Sans Arabic font.
 
-Run quality gates from this folder:
+Run the client checks from this directory:
 
 ```powershell
 flutter pub get
@@ -23,3 +19,7 @@ dart format --output=none --set-exit-if-changed lib test
 flutter analyze
 flutter test
 ```
+
+The client currently stores data through `shared_preferences` and does not send
+financial records to the FastAPI service. See
+[`docs/ROADMAP.md`](../../docs/ROADMAP.md) for the planned integration work.
