@@ -10,6 +10,8 @@ import 'package:money_pilot/src/forecast_engine.dart';
 import 'package:money_pilot/src/initial_data.dart';
 import 'package:money_pilot/src/local_repository.dart';
 import 'package:money_pilot/src/models.dart';
+import 'package:money_pilot/src/recurring_engine.dart';
+import 'package:money_pilot/src/transaction_csv.dart';
 
 final localRepositoryProvider = Provider<LocalRepository>((ref) {
   final userId = ref.watch(
@@ -45,6 +47,7 @@ class AppController extends StateNotifier<AppData> {
   final LocalRepository _repository;
   final DioSyncGateway _syncGateway;
   final LocalCoachEngine _coach = const LocalCoachEngine();
+  final TransactionCsvCodec _csv = const TransactionCsvCodec();
   bool _coachBusy = false;
   int _sequence = 0;
 
@@ -67,6 +70,45 @@ class AppController extends StateNotifier<AppData> {
 
   int get netWorthMinor =>
       state.accounts.fold(0, (total, account) => total + account.balanceMinor);
+
+  List<RecurringTransactionInsight> get recurringInsights =>
+      RecurringEngine.detect(state.transactions);
+
+  String exportTransactionsCsv() => _csv.encode(
+    state.transactions,
+    accounts: state.accounts,
+    categories: state.categories,
+  );
+
+  CsvImportResult importTransactionsCsv(String input) {
+    final result = _csv.decode(
+      input,
+      accounts: state.accounts,
+      categories: state.categories,
+      newId: () => _newId('tx'),
+    );
+    if (result.transactions.isEmpty) return result;
+    final fingerprints = state.transactions
+        .map(_transactionFingerprint)
+        .toSet();
+    final unique = result.transactions
+        .where((item) => fingerprints.add(_transactionFingerprint(item)))
+        .toList();
+    if (unique.isEmpty) {
+      return CsvImportResult(transactions: const [], issues: result.issues);
+    }
+    var accounts = [...state.accounts];
+    for (final item in unique) {
+      accounts = _applyBalanceDelta(accounts, item.accountId, item.amountMinor);
+    }
+    final transactions = [...state.transactions, ...unique]
+      ..sort((a, b) => b.date.compareTo(a.date));
+    _commit(state.copyWith(accounts: accounts, transactions: transactions));
+    return CsvImportResult(transactions: unique, issues: result.issues);
+  }
+
+  String _transactionFingerprint(FinanceTransaction item) =>
+      '${item.date.toIso8601String().split('T').first}|${item.title.trim().toLowerCase()}|${item.amountMinor}|${item.accountId}|${item.categoryId}';
 
   Iterable<FinanceTransaction> get currentMonthTransactions {
     final now = DateTime.now();
@@ -434,10 +476,35 @@ class AppController extends StateNotifier<AppData> {
       _commit(state.copyWith(settings: settings));
 
   Future<void> syncNow() async {
-    state = state.copyWith(syncStatus: 'Checking sync queue…');
+    state = state.copyWith(syncStatus: 'Checking API connection…');
     final result = await _syncGateway.sync(state);
     state = state.copyWith(syncStatus: result);
     await _repository.save(state);
+  }
+
+  Future<String> connectApi({
+    required String baseUrl,
+    required String email,
+    required String password,
+  }) async {
+    final settings = state.settings.copyWith(apiBaseUrl: baseUrl.trim());
+    state = state.copyWith(
+      settings: settings,
+      syncStatus: 'Signing in to API…',
+    );
+    final result = await _syncGateway.connect(
+      baseUrl: settings.apiBaseUrl,
+      email: email,
+      password: password,
+    );
+    state = state.copyWith(syncStatus: result);
+    await _repository.save(state);
+    return result;
+  }
+
+  void disconnectApi() {
+    _syncGateway.disconnect();
+    _commit(state.copyWith(syncStatus: 'API session disconnected'));
   }
 
   Future<void> askCoach(String prompt) async {

@@ -362,6 +362,7 @@ class AppSettings {
     this.languageCode = 'en',
     this.themePalette = 'ocean',
     this.glowEffects = false,
+    this.apiBaseUrl = 'http://127.0.0.1:8000',
   });
 
   final String themeMode;
@@ -376,6 +377,7 @@ class AppSettings {
   final String languageCode;
   final String themePalette;
   final bool glowEffects;
+  final String apiBaseUrl;
 
   AppSettings copyWith({
     String? themeMode,
@@ -390,6 +392,7 @@ class AppSettings {
     String? languageCode,
     String? themePalette,
     bool? glowEffects,
+    String? apiBaseUrl,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     highContrast: highContrast ?? this.highContrast,
@@ -403,6 +406,7 @@ class AppSettings {
     languageCode: languageCode ?? this.languageCode,
     themePalette: themePalette ?? this.themePalette,
     glowEffects: glowEffects ?? this.glowEffects,
+    apiBaseUrl: apiBaseUrl ?? this.apiBaseUrl,
   );
 
   Json toJson() => {
@@ -418,6 +422,7 @@ class AppSettings {
     'languageCode': languageCode,
     'themePalette': themePalette,
     'glowEffects': glowEffects,
+    'apiBaseUrl': apiBaseUrl,
   };
 
   factory AppSettings.fromJson(Json json) => AppSettings(
@@ -443,6 +448,7 @@ class AppSettings {
       _ => 'ocean',
     },
     glowEffects: json['glowEffects'] as bool? ?? false,
+    apiBaseUrl: json['apiBaseUrl'] as String? ?? 'http://127.0.0.1:8000',
   );
 }
 
