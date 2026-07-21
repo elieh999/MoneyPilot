@@ -1,132 +1,121 @@
 # MoneyPilot
 
-> Current release: **MoneyPilot 1.3.0** — complete English, French, and Arabic
-> interface coverage, spending calendar, five color palettes, glow effects,
-> secure financial-data wiping, and password-confirmed account deletion.
+[![Flutter checks](https://github.com/elieh999/MoneyPilot/actions/workflows/flutter.yml/badge.svg)](https://github.com/elieh999/MoneyPilot/actions/workflows/flutter.yml)
+[![Python checks](https://github.com/elieh999/MoneyPilot/actions/workflows/python.yml/badge.svg)](https://github.com/elieh999/MoneyPilot/actions/workflows/python.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-MoneyPilot is an offline-first personal-finance companion for mobile and
-desktop. The product helps a person understand cash flow, plan salary, track
-accounts and transactions, build budgets and goals, and ask a permissioned AI
-coach for evidence-based explanations. It is not a bank, accounting package,
-or substitute for professional financial, tax, investment, or legal advice.
+MoneyPilot is a personal finance app for tracking accounts, transactions,
+budgets, bills, and savings goals. The Flutter client works locally on desktop
+and mobile, starts with an empty workspace, and keeps each profile separate.
 
-This repository is a tested MVP foundation with a ready-to-run Windows desktop
-build. The Flutter client now starts with no financial records, supports
-password-protected local profiles and recovery codes, isolates each profile's
-workspace, and includes a private conversational Local Coach. English, French,
-and right-to-left Arabic are selectable in Settings, including multilingual
-Coach replies. Cloud sync remains
-an optional later integration; see the [deliverable status](docs/DELIVERABLE_STATUS.md)
-for the exact implemented and deferred boundary.
+The interface supports English, French, and Arabic, including right to left
+layout. It also includes a spending calendar, several color palettes, reports,
+purchase checks, and a local financial coach that answers from the records the
+user has entered.
 
-The repository is organized as a monorepo:
+The project is still under active development. The desktop client works without
+the API, while cloud synchronization between Flutter and FastAPI is not wired up
+yet.
 
-- `apps/money_pilot`: Flutter client for Android, iOS, Windows, macOS, and Linux.
-- `services/api`: FastAPI service and the server-owned authorization boundary.
-- `packages/financial_core_python`: deterministic money calculations and tests.
-- `packages/financial_contracts`: cross-runtime calculation test vectors.
-- `infrastructure`: local Docker environment.
-- `docs`: product and engineering contracts.
-- `scripts`: Windows PowerShell developer helpers.
+## Screenshots
 
-## Start locally
+| Desktop | Mobile |
+| --- | --- |
+| ![MoneyPilot desktop dashboard](docs/previews/money_pilot_desktop.png) | ![MoneyPilot mobile onboarding](docs/previews/money_pilot_mobile.png) |
 
-For the shortest handoff path, begin with [START_HERE.md](START_HERE.md).
+## What works
 
-Prerequisites: Git, Python 3.12+, Docker Desktop with Compose, and Flutter on
-`PATH` (or `FLUTTER_ROOT` set to a standard Flutter SDK installation).
+- Local account creation, sign in, recovery codes, sign out, and account deletion
+- Separate financial data for each local profile
+- Accounts, transactions, categories, budgets, bills, and goals
+- Calendar summaries for daily and monthly activity
+- Reports, forecasting, and purchase affordability checks
+- English, French, and Arabic interface text
+- Light, dark, system, and high contrast appearance options
+- Ocean, cyan, forest, violet, and sunset color palettes
+- Local coach replies based on the active profile's data
+- FastAPI endpoints for authentication and financial records
+- Automated Flutter and Python tests
 
-```powershell
-Copy-Item .env.example .env
-.\scripts\setup-dev.ps1
-.\scripts\start-infra.ps1
-```
+## Running the project
 
-Run the API and client in separate terminals:
-
-```powershell
-.\scripts\run-api.ps1
-.\scripts\run-flutter.ps1
-```
-
-API documentation is available at `http://localhost:8000/docs` when the API is
-running. MinIO's console is at `http://localhost:9001`, and Mailpit is at
-`http://localhost:8025`.
-
-### Quick start without Docker
-
-The API supports a local SQLite fallback, and the Flutter app runs locally
-without the API. Docker is therefore recommended for the complete dependency
-stack, not required for the first launch:
+The helper scripts target Windows PowerShell. Install Python 3.12 or newer and
+Flutter, then run:
 
 ```powershell
 .\scripts\setup-dev.ps1
 .\scripts\run-api.ps1 -SQLite
 ```
 
-In another terminal run `.\scripts\run-flutter.ps1`. The `-SQLite` switch
-deliberately overrides the PostgreSQL URL copied from `.env` for that API process.
+Start the Flutter client in another terminal:
 
-To run all available checks:
+```powershell
+.\scripts\run-flutter.ps1
+```
+
+Docker Desktop is optional for the first local run. The API can use SQLite for
+development, and the Flutter client can run without the API. See
+[Development](docs/DEVELOPMENT.md) for Docker commands, manual setup, and common
+problems.
+
+## Project layout
+
+```text
+apps/money_pilot/               Flutter client
+services/api/                   FastAPI service
+packages/financial_core_python/ Shared calculation code
+packages/financial_contracts/   Calculation test data
+infrastructure/                 Local Docker services
+scripts/                        PowerShell helpers
+docs/                           Technical notes and screenshots
+```
+
+## Tests
+
+Run the available checks from the repository root:
 
 ```powershell
 .\scripts\check.ps1
 ```
 
-See [Local setup](docs/LOCAL_SETUP.md) for manual commands and troubleshooting.
-Never reuse the development credentials in a deployed environment.
+The script runs Python tests and linting, then Dart formatting, Flutter analysis,
+and Flutter tests when those tools are installed.
 
-## Scope and status
+## Implementation notes
 
-The canonical scope is defined in [Product specification](docs/PRODUCT_SPEC.md)
-and staged in [MVP backlog](docs/MVP_BACKLOG.md). Phase 1 is a foundation, not a
-claim that every advanced feature in the source briefs is implemented. The
-repository must remain runnable and tested at every milestone.
+- Money values use integer minor units to avoid floating point rounding errors.
+- Transfers do not count as income or expenses.
+- API resources are checked against the signed in owner.
+- The coach cannot save a proposed change without confirmation.
+- Local passwords and recovery codes are hashed with Argon2id.
 
-## UI previews
+## Current limitations
 
-[Desktop dashboard](docs/previews/money_pilot_desktop.png) and
-[mobile onboarding](docs/previews/money_pilot_mobile.png) were rendered from the
-tested Flutter widget tree. They are representative previews, not store assets.
+- The Flutter client stores a local snapshot instead of a synchronized database.
+- Flutter and FastAPI authentication are separate development paths.
+- Remote AI providers are not configured by default.
+- The local financial snapshot is not protected by database level encryption.
+- Store signing, hosted infrastructure, and production monitoring are not part of
+  this repository yet.
 
-## Engineering documentation
+The main unfinished work is tracked in the [roadmap](docs/ROADMAP.md).
 
-- [Architecture and diagrams](docs/ARCHITECTURE.md)
-- [Repository structure](docs/REPOSITORY_STRUCTURE.md)
-- [Primary user journeys](docs/USER_JOURNEYS.md)
-- [MVP backlog and acceptance criteria](docs/MVP_BACKLOG.md)
-- [Data model and ERD](docs/DATA_MODEL.md)
-- [API modules](docs/API_OVERVIEW.md)
+## Documentation
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [Data model](docs/DATA_MODEL.md)
+- [Development and testing](docs/DEVELOPMENT.md)
 - [Financial calculations](docs/FINANCIAL_CALCULATIONS.md)
-- [Offline synchronization](docs/OFFLINE_SYNC.md)
-- [Security, privacy, and threat model](docs/SECURITY_PRIVACY.md)
-- [AI tools and action approval](docs/AI_ARCHITECTURE.md)
-- [Design system and screen map](docs/DESIGN_SYSTEM.md)
-- [Testing guide](docs/TESTING.md)
-- [Deployment](docs/DEPLOYMENT.md)
-- [Release checklist](docs/RELEASE_CHECKLIST.md)
-- [Roadmap and technical debt](docs/ROADMAP_TECHNICAL_DEBT.md)
-- [Deliverable status](docs/DELIVERABLE_STATUS.md)
-- [Verification record](VERIFICATION.md)
-- [Security policy](SECURITY.md)
-- [Third-party notices](THIRD_PARTY_NOTICES.md)
+- [Local Coach](docs/COACH.md)
+- [API](services/api/README.md)
 
-## Product invariants
+## Contributing
 
-1. Money is never represented with binary floating point.
-2. Transfers never count as income or expense.
-3. The local database is the client's source for rendering; sync is incremental.
-4. Retried writes are idempotent and deletions use tombstones.
-5. The API authorizes every resource by authenticated owner; client owner IDs
-   are never trusted.
-6. AI receives the minimum structured context required, cannot execute arbitrary
-   SQL or code, and cannot mutate data without a fresh user approval.
-7. Calculations expose inputs, assumptions, currency, rounding, and uncertainty.
+Bug reports, focused pull requests, and documentation fixes are welcome. Read
+[CONTRIBUTING.md](CONTRIBUTING.md) before opening a change.
 
-## License and legal
+## License
 
-MoneyPilot is released under the [MIT License](LICENSE). Third-party components
-retain their own licenses as documented in
+MoneyPilot is available under the [MIT License](LICENSE). Bundled fonts and
+platform files retain their original licenses as listed in
 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
-Privacy-policy and terms text must be reviewed by qualified counsel before a
-production or store release.

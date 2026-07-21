@@ -25,7 +25,7 @@ Gradle build tooling and is distributed under the Apache License 2.0.
 
 ## Flutter runner templates
 
-The platform runner scaffolding under `apps/money_pilot/android`, `ios`,
+The platform runner files under `apps/money_pilot/android`, `ios`,
 `linux`, `macos`, and `windows` was generated from Flutter project templates.
 Flutter is distributed under the BSD 3-Clause License.
 

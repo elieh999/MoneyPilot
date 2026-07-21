@@ -1,8 +1,9 @@
-# Financial calculations and policy decisions
+# Financial calculations
 
-This document is normative. UI, API, background jobs, and AI tools call the same
-versioned financial core and display its inputs; prompts do not recalculate
-money. Initial Python implementations live in `packages/financial_core_python`.
+MoneyPilot keeps financial calculations in shared, testable helpers so the API
+and client can follow the same rounding rules. The Python implementation lives
+in `packages/financial_core_python`, with cross language examples in
+`packages/financial_contracts/vectors.json`.
 
 ## Numeric and time rules
 

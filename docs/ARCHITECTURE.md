@@ -1,127 +1,72 @@
 # Architecture
 
-## Context
+MoneyPilot currently has two application paths: a standalone Flutter client and
+a FastAPI service. They share financial rules and concepts, but the client is
+not yet connected to the API.
 
 ```mermaid
 flowchart LR
-    U["Personal user"] --> F["Flutter application"]
-    F <--> A["MoneyPilot API"]
-    A --> P[("PostgreSQL")]
-    A --> R[("Redis")]
-    A --> O["S3-compatible storage"]
-    A --> E["Email and notification providers"]
-    A --> G["Exchange-rate provider"]
-    A --> AI["Replaceable AI provider"]
-    F --> N["Device biometrics and local notifications"]
+    U["User"] --> F["Flutter client"]
+    F --> L["Local profile and financial snapshot"]
+    F --> C["Deterministic Local Coach"]
+
+    D["API developer"] --> A["FastAPI service"]
+    A --> S[("SQLite or PostgreSQL")]
+    A --> P["Deterministic provider and tools"]
+
+    V["Shared calculation test data"] --> F
+    V --> A
 ```
 
-Core financial recording remains usable when the API or optional providers are
-unavailable. Bank connections and money movement are not part of the MVP trust
-boundary.
+## Flutter client
 
-## Containers
+The client lives in `apps/money_pilot`. Riverpod manages application state and
+GoRouter handles navigation. Responsive screens support desktop and mobile
+layouts.
 
-```mermaid
-flowchart TB
-    subgraph Device["User device"]
-      UI["Flutter presentation"]
-      APP["Application use cases"]
-      DOM["Dart domain model"]
-      LDB[("Encrypted SQLite / Drift")]
-      OUT["Sync outbox and inbox"]
-      SEC["Secure token storage"]
-      UI --> APP --> DOM
-      APP --> LDB
-      APP --> OUT
-      APP --> SEC
-    end
+Local users, password hashes, recovery code hashes, settings, and financial
+snapshots are stored through `shared_preferences`. Each financial snapshot uses
+a key derived from the local user ID, which keeps profiles separate on the same
+device.
 
-    subgraph Server["Trusted server boundary"]
-      API["FastAPI routes"]
-      SVC["Application services"]
-      AUTH["Authorization and policy"]
-      CORE["Financial core"]
-      SYNC["Sync service"]
-      AIO["AI orchestrator and tool gateway"]
-      JOBS["Background workers"]
-      API --> SVC
-      SVC --> AUTH
-      SVC --> CORE
-      API --> SYNC
-      API --> AIO
-      JOBS --> SVC
-    end
+The current storage format is a serialized application snapshot. It is useful
+for local development, but it is not a replacement for an encrypted database,
+transactions, migrations, or a synchronization queue.
 
-    OUT <--> SYNC
-    Server --> DB[("PostgreSQL")]
-    Server --> REDIS[("Redis")]
-    Server --> S3["Object storage"]
-    AIO --> PROVIDER["AIProvider adapter"]
-```
+## FastAPI service
 
-## Architectural decisions
+The API lives in `services/api` and exposes versioned routes under `/api/v1`.
+It uses Pydantic schemas, SQLAlchemy models, and Alembic migrations. SQLite is
+the default development database; PostgreSQL is available through configuration
+and the Docker Compose environment.
 
-| Concern | Decision |
-|---|---|
-| Product identity | `MoneyPilot AI`; display name remains configuration-driven. |
-| Client | Flutter clean architecture with feature modules and responsive navigation. |
-| API | Python 3.12+, FastAPI, Pydantic, SQLAlchemy 2, Alembic, versioned REST/OpenAPI. |
-| Money | Integer minor units in domain contracts; `Decimal` for rates/intermediate math; `ROUND_HALF_UP`; currency code and scale are mandatory. |
-| Persistence | SQLite is the client rendering source; PostgreSQL is the synchronized server record. |
-| Sync | Operation outbox, idempotency keys, server revisions, cursor pull, tombstones, and explicit critical-field conflicts. |
-| Realtime | WebSocket/SSE is a wake-up hint; correctness comes from cursor-based pull, not message delivery. |
-| Authentication | Short-lived access token; rotated, hashed refresh tokens per device; biometrics only unlock local credentials. |
-| Files | Private S3 objects; short-lived signed URLs; metadata and ownership stored server-side. |
-| AI | Provider-neutral adapter; structured allowlisted tools; no arbitrary SQL/code; exact-diff action approval. |
-| Jobs | Durable background queue; idempotent, retry-safe, observable tasks with deduplication. |
-| Time | Server timestamps are UTC; calendar semantics use the user's IANA timezone. |
+API services check resources against the authenticated owner. Money is stored in
+integer minor units, and transfers update both owned accounts without entering
+income or expense totals.
 
-## Request path
+The committed OpenAPI document is generated from the FastAPI application and is
+checked by the test suite.
 
-1. Route parses a strict schema and attaches correlation/authentication context.
-2. Application service loads the resource through an owner-scoped repository.
-3. Policy checks operation, resource state, and optional step-up authentication.
-4. Domain/financial core validates invariants and computes deterministic values.
-5. One database transaction writes state, audit metadata, sync revision, and any
-   outbox event.
-6. Response uses a stable envelope and never exposes internal exceptions.
+## Shared financial rules
 
-AI tools enter at step 2 and receive no privileged bypass. Background jobs use
-service identities with explicit capabilities and call the same services.
+Python calculation helpers live in `packages/financial_core_python`. Language
+neutral examples in `packages/financial_contracts/vectors.json` are exercised by
+both the Python and Flutter test suites. This catches differences in rounding,
+budget status, savings rate, and safe to spend calculations.
 
-## Offline write and convergence
+## Local infrastructure
 
-```mermaid
-sequenceDiagram
-    participant U as User
-    participant C as Flutter + SQLite
-    participant S as Sync API
-    participant D as PostgreSQL
-    U->>C: Save transaction
-    C->>C: Commit row + outbox operation atomically
-    C-->>U: Render pending state immediately
-    C->>S: Push operation_id, base_revision, payload
-    S->>D: Authorize and apply idempotently
-    D-->>S: server_revision and canonical record
-    S-->>C: Acknowledge or return conflict
-    C->>S: Pull after cursor
-    S-->>C: Ordered changes and next cursor
-    C->>C: Apply inbox transaction and advance cursor
-```
+`infrastructure/docker-compose.yml` provides PostgreSQL, Redis, MinIO, Mailpit,
+and the API for local development. Redis, MinIO, and Mailpit are available to
+support future integrations; they are not authoritative financial storage.
 
-## Deployment topology
+## Boundaries to keep visible
 
-Production separates the API, worker/scheduler, managed PostgreSQL, managed
-Redis, private object storage, and secrets manager. The API is stateless and may
-scale horizontally. Migrations run as a single release job before compatible
-application rollout. `infrastructure/docker-compose.yml` is development-only.
+- Flutter authentication and API authentication are currently separate.
+- The Flutter sync gateway does not transmit financial data.
+- The local coach and API provider are deterministic by default.
+- No production hosting configuration is included.
+- Local financial snapshots are not database level encrypted.
 
-## Failure boundaries
-
-- Loss of realtime delivery triggers the next poll; it cannot lose data.
-- Provider AI failure returns a recoverable unavailable state; no core workflow
-  depends on AI.
-- OCR/import failures preserve the source and row-level diagnostics for review.
-- Redis loss may reduce caching/async capacity but must not bypass authorization
-  or corrupt the ledger.
-- A database write and its sync/audit metadata commit together or roll back.
+These gaps are listed in [ROADMAP.md](ROADMAP.md) so the repository does not
+present planned infrastructure as finished behavior.
