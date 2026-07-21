@@ -5,23 +5,23 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 MoneyPilot is a personal finance app for tracking accounts, transactions,
-budgets, bills, and savings goals. The Flutter client works locally on desktop
-and mobile, starts with an empty workspace, and keeps each profile separate.
+budgets, bills, and savings goals. The verified Windows client starts with an
+empty workspace and keeps each profile separate.
 
 The interface supports English, French, and Arabic, including right to left
 layout. It also includes a spending calendar, several color palettes, reports,
 purchase checks, and a local financial coach that answers from the records the
 user has entered.
 
-The project is still under active development. The desktop client works without
+The project is still under active development. The Windows client works without
 the API. It can verify and authenticate a FastAPI account, but it does not upload
 financial records yet.
 
 ## Screenshots
 
-| Desktop | Mobile |
+| Windows application | Narrow layout preview |
 | --- | --- |
-| ![MoneyPilot desktop dashboard](docs/previews/money_pilot_desktop.png) | ![MoneyPilot mobile onboarding](docs/previews/money_pilot_mobile.png) |
+| ![MoneyPilot Windows dashboard](docs/previews/money_pilot_desktop.png) | ![MoneyPilot responsive onboarding layout](docs/previews/money_pilot_mobile.png) |
 
 ## What works
 
@@ -38,6 +38,19 @@ financial records yet.
 - Local coach replies based on the active profile's data
 - FastAPI endpoints for authentication and financial records
 - Automated Flutter and Python tests
+
+## Platform status
+
+| Target | Status |
+| --- | --- |
+| Windows | Built, tested, launch checked, and available as a download |
+| Android | Flutter runner scaffold is present; no verified APK or device test |
+| iOS | Flutter runner scaffold is present; no verified IPA or device test |
+| macOS | Flutter runner scaffold is present; not built or tested |
+| Linux | Flutter runner scaffold is present; not built or tested |
+
+Responsive widget tests cover narrow layouts, including Arabic right to left
+screens. They do not replace a build or test on a mobile device.
 
 ## Start on Windows
 

@@ -1,6 +1,8 @@
 # MoneyPilot Flutter client
 
-This directory contains the Flutter application for desktop and mobile.
+This directory contains the Flutter client. Windows is the only target currently
+built and tested in CI. Android, iOS, macOS, and Linux runner scaffolds are
+present, but releases for those platforms have not been produced or verified.
 
 New profiles start with no financial records. Local authentication supports
 password hashing, recovery codes, sign in lockout, sign out, and account
@@ -10,6 +12,9 @@ The interface includes accounts, transactions, budgets, bills, goals, reports,
 purchase checks, calendar summaries, appearance settings, and a local financial
 coach. English, French, and Arabic are built in. Arabic switches the layout to
 right to left and uses the bundled Noto Sans Arabic font.
+
+Widget tests exercise both wide and narrow layouts. A narrow layout test is not
+the same as an Android or iOS build or device test.
 
 Run the client checks from this directory:
 

@@ -1,5 +1,5 @@
 name: money_pilot
-description: Offline-first personal finance companion for desktop and mobile.
+description: Local-first personal finance client with a verified Windows build.
 publish_to: 'none'
 version: 1.3.2+5
 

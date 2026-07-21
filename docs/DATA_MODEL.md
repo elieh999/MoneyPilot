@@ -1,145 +1,93 @@
-# Data model and entity relationship diagram
+# Data model
 
-## Conventions
+MoneyPilot currently has two separate storage models. The Flutter client saves
+one encrypted local snapshot per profile. The optional FastAPI service uses a
+relational database. The client does not synchronize financial records with the
+API yet.
 
-Financial entities use UUIDs, authenticated `owner_id`, UTC `created_at` and
-`updated_at`, `deleted_at` tombstones where appropriate, monotonic `version`, and
-`source`. Money stores integer minor units plus ISO 4217 currency. Flexible JSON
-is limited to provider metadata or versioned snapshots; searchable domain data
-is normalized.
+## Flutter snapshot
 
-Public schemas never accept authoritative owner, audit, approval, or revision
-fields. Foreign keys and service policies preserve financial history. A user
-deletion workflow, rather than informal cascades, controls erasure.
+`apps/money_pilot/lib/src/models.dart` defines the local snapshot. It contains:
 
-## Entity groups
+- accounts
+- spending categories
+- transactions
+- monthly budgets
+- bills
+- savings goals
+- coach messages and pending coach actions
+- application settings
 
-- **Identity/security:** users, profiles, preferences, identities, sessions,
-  devices, security events, recovery codes.
-- **Ledger:** accounts, balance snapshots, reconciliations, transactions,
-  transfer groups, transaction splits, attachments, merchants, categories,
-  rules, tags, transaction tags.
-- **Planning:** income sources, salary plans/deductions/allocations, budgets,
-  periods and category lines, bills and occurrences, goals and contributions,
-  emergency fund configuration.
-- **Advanced finance:** subscriptions and price history, debts and payments,
-  assets, net worth snapshots, forecast scenarios and points, exchange rates.
-- **Operations:** sync operations, server revisions for each user, audit logs,
-  notifications/preferences, imports/rows, exports, receipts/items, user files.
-- **AI:** conversations, messages, tool calls, action proposals/approvals,
-  memories, insights, evidence, and feedback.
+New profiles contain the built in category list but no accounts, transactions,
+budgets, bills, goals, or invented balances. The complete snapshot is serialized
+and protected with authenticated AES-GCM encryption before it is written through
+`shared_preferences`.
 
-## Current data map
+This format is convenient for a local application, but it does not provide
+database transactions, migrations, queries, or synchronization history.
+
+## API database
+
+The current SQLAlchemy models are in
+`services/api/src/money_pilot_api/models.py`.
 
 ```mermaid
 erDiagram
-    USER ||--|| USER_PROFILE : has
-    USER ||--o{ SESSION : authenticates
-    USER ||--o{ DEVICE : owns
+    USER ||--o{ SESSION : has
     USER ||--o{ ACCOUNT : owns
     USER ||--o{ CATEGORY : owns
     USER ||--o{ TRANSACTION : owns
     USER ||--o{ BUDGET : owns
-    USER ||--o{ INCOME_SOURCE : owns
     USER ||--o{ BILL : owns
-    USER ||--o{ SAVINGS_GOAL : owns
+    USER ||--o{ GOAL : owns
     USER ||--o{ SYNC_OPERATION : submits
-    USER ||--o{ AUDIT_LOG : produces
+    USER ||--o{ AI_ACTION_PROPOSAL : reviews
 
     ACCOUNT ||--o{ TRANSACTION : records
-    TRANSACTION ||--o{ TRANSACTION_SPLIT : contains
-    CATEGORY ||--o{ TRANSACTION_SPLIT : classifies
-    CATEGORY ||--o{ CATEGORY : parent_of
-    TRANSACTION }o--o| TRANSFER_GROUP : links
-
-    BUDGET ||--|{ BUDGET_PERIOD : spans
-    BUDGET_PERIOD ||--o{ BUDGET_LINE : allocates
-    CATEGORY ||--o{ BUDGET_LINE : limits
-
-    INCOME_SOURCE ||--o{ INCOME_OCCURRENCE : schedules
-    BILL ||--o{ BILL_OCCURRENCE : schedules
-    SAVINGS_GOAL ||--o{ GOAL_CONTRIBUTION : receives
-    ACCOUNT ||--o{ GOAL_CONTRIBUTION : funds
-
-    USER {
-      uuid id PK
-      text email UK
-      text password_hash
-      timestamptz created_at
-      timestamptz deleted_at
-    }
-    ACCOUNT {
-      uuid id PK
-      uuid owner_id FK
-      text type
-      text currency
-      bigint opening_balance_minor
-      boolean include_safe_to_spend
-      int version
-      timestamptz deleted_at
-    }
-    TRANSACTION {
-      uuid id PK
-      uuid owner_id FK
-      uuid account_id FK
-      uuid transfer_group_id FK
-      text kind
-      bigint amount_minor
-      text currency
-      timestamptz occurred_at
-      text status
-      int version
-      timestamptz deleted_at
-    }
-    TRANSACTION_SPLIT {
-      uuid id PK
-      uuid transaction_id FK
-      uuid category_id FK
-      bigint amount_minor
-      text currency
-    }
-    SYNC_OPERATION {
-      uuid operation_id PK
-      uuid owner_id FK
-      text device_id
-      text entity_type
-      uuid entity_id
-      int base_version
-      text outcome
-      bigint server_revision
-    }
+    ACCOUNT ||--o{ TRANSACTION : receives_transfer
+    CATEGORY ||--o{ TRANSACTION : classifies
+    CATEGORY ||--o{ BUDGET : limits
+    CATEGORY ||--o{ BILL : classifies
+    ACCOUNT ||--o{ BILL : pays
+    ACCOUNT ||--o{ GOAL : links
 ```
 
-## Ledger decisions
+The implemented tables are:
 
-- Amounts are zero or greater; transaction `kind` determines direction.
-  This avoids ambiguous APIs with mixed signs. Refunds reduce the original expense
-  category when linked; otherwise they are reported as unallocated refunds, not
-  salary/income.
-- A transfer is two linked account legs sharing `transfer_group_id`, written in
-  one transaction. Transfers between currencies retain source amount, destination
-  amount, currencies, and applied rate.
-- Account balance is derived from opening balance plus posted ledger entries.
-  Cached/snapshot balances include an `as_of_revision`; reconciliation creates
-  an explicit adjustment rather than rewriting history.
-- Split totals must equal the parent amount in the same currency. Rounding
-  remainder is assigned consistently to the last visible split.
-- Pending entries affect available balance policy but not finalized reports.
+- `users` and `sessions`
+- `accounts` and `categories`
+- `transactions`
+- `budgets`, `bills`, and `goals`
+- `sync_operations`
+- `ai_action_proposals`
 
-## Constraints and indexes
+Most financial records use UUID identifiers, integer minor units for money,
+created and updated timestamps, a version number, and a soft deletion timestamp.
+Every API query scopes owned resources to the authenticated `user_id`.
 
-- Unique normalized email; unique `(owner_id, device_id, refresh_token_family)`;
-  unique `(owner_id, operation_id)` and import row fingerprint per import.
-- Checks for valid currency and scale, amounts of zero or greater, valid date ranges,
-  supported entity states, and exactly two balanced transfer legs.
-- Owner and date indexes on transactions; owner, status, and due date indexes on bills;
-  owner/deleted/version indexes for sync; expiry indexes on sessions, proposals,
-  exports, and upload reservations.
-- Partial indexes should exclude tombstoned rows for ordinary queries while
-  preserving tombstones until all active device retention windows pass.
+Transactions store one source account and an optional destination account. A
+transfer is currently represented by one transaction that updates both owned
+accounts. Transaction splits and transfer group tables are not implemented.
 
-## Possible household support
+## Not implemented yet
 
-Future sharing introduces `workspace`, `workspace_member`, and scoped roles.
-Until that migration exists, `owner_id` is always the authenticated user. Do not
-simulate sharing by accepting another user's ID or weakening repository filters.
+The following ideas are not part of the current database:
+
+- user profiles, devices, and security event tables
+- transaction splits, attachments, tags, and merchant tables
+- income schedules, budget periods, and bill occurrences
+- goal contribution history
+- debts, assets, exchange rates, and net worth snapshots
+- imports, exports, receipts, notifications, and user file storage
+- AI conversation, message, memory, evidence, and feedback tables
+
+These should be added only when a feature needs them, together with a migration,
+API schema, ownership checks, and tests.
+
+## Future synchronization
+
+The API has an experimental `sync_operations` endpoint, but the Flutter client
+does not send its local snapshot to it. A usable synchronization system still
+needs a client change queue, server pull cursor, conflict handling, and an
+identity link between local profiles and API users. That work is tracked in the
+[roadmap](ROADMAP.md).

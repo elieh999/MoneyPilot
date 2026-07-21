@@ -22,8 +22,9 @@ flowchart LR
 ## Flutter client
 
 The client lives in `apps/money_pilot`. Riverpod manages application state and
-GoRouter handles navigation. Responsive screens support desktop and mobile
-layouts.
+GoRouter handles navigation. Screens adapt to wide and narrow viewports. Windows
+is the only native target built and tested in CI; the other Flutter runners are
+scaffolds rather than verified releases.
 
 Local users, password hashes, recovery code hashes, settings, and financial
 snapshots are stored through `shared_preferences`. Each profile has a random

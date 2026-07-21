@@ -68,5 +68,6 @@ installation is not required.
 - Coach tools are allowlisted and checked against the authenticated owner.
 - Budget suggestions remain drafts until the approval endpoint performs the write.
 
-The Flutter client is not connected to this API yet. That work is tracked in
-[`docs/ROADMAP.md`](../../docs/ROADMAP.md).
+The Flutter client can log in to an API account and verify the current session
+through `/auth/me`. It does not upload or download financial records. Financial
+synchronization is tracked in [`docs/ROADMAP.md`](../../docs/ROADMAP.md).
