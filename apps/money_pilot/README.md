@@ -20,6 +20,8 @@ flutter analyze
 flutter test
 ```
 
-The client currently stores data through `shared_preferences` and does not send
-financial records to the FastAPI service. See
+The client stores an AES-GCM encrypted financial snapshot through
+`shared_preferences`, supports validated CSV transfer and recurring activity
+insights, and can verify an optional FastAPI account session. It does not send
+financial records to the service. See
 [`docs/ROADMAP.md`](../../docs/ROADMAP.md) for the planned integration work.

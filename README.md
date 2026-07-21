@@ -14,8 +14,8 @@ purchase checks, and a local financial coach that answers from the records the
 user has entered.
 
 The project is still under active development. The desktop client works without
-the API, while cloud synchronization between Flutter and FastAPI is not wired up
-yet.
+the API. It can verify and authenticate a FastAPI account, but it does not upload
+financial records yet.
 
 ## Screenshots
 
@@ -28,6 +28,8 @@ yet.
 - Local account creation, sign in, recovery codes, sign out, and account deletion
 - Separate financial data for each local profile
 - Accounts, transactions, categories, budgets, bills, and goals
+- CSV transaction import and export with row validation and duplicate checks
+- Recurring weekly and monthly transaction insights
 - Calendar summaries for daily and monthly activity
 - Reports, forecasting, and purchase affordability checks
 - English, French, and Arabic interface text
@@ -88,13 +90,16 @@ and Flutter tests when those tools are installed.
 - API resources are checked against the signed in owner.
 - The coach cannot save a proposed change without confirmation.
 - Local passwords and recovery codes are hashed with Argon2id.
+- Local financial snapshots use authenticated AES-GCM encryption and migrate
+  older plaintext snapshots automatically.
 
 ## Current limitations
 
 - The Flutter client stores a local snapshot instead of a synchronized database.
-- Flutter and FastAPI authentication are separate development paths.
+- Flutter local profiles and optional FastAPI accounts remain separate identities.
 - Remote AI providers are not configured by default.
-- The local financial snapshot is not protected by database level encryption.
+- The local encryption key is stored separately in app preferences, not in a
+  platform hardware-backed key store.
 - Store signing, hosted infrastructure, and production monitoring are not part of
   this repository yet.
 

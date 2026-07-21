@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:money_pilot/src/localization.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:money_pilot/src/app_controller.dart';
 import 'package:money_pilot/src/formatters.dart';
 import 'package:money_pilot/src/models.dart';
+import 'package:money_pilot/src/recurring_engine.dart';
 import 'package:money_pilot/src/widgets/common.dart';
 
 class TransactionsScreen extends ConsumerStatefulWidget {
@@ -26,6 +28,8 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
   @override
   Widget build(BuildContext context) {
     final data = ref.watch(appControllerProvider);
+    final controller = ref.read(appControllerProvider.notifier);
+    final recurring = controller.recurringInsights;
     final query = _searchController.text.trim().toLowerCase();
     final visible = data.transactions.where((transaction) {
       final matchesText =
@@ -41,6 +45,37 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
       title: 'Transactions',
       subtitle: 'Search, categorize, and edit every local money movement.',
       actions: [
+        Tooltip(
+          message: context.l10n.translate('Import transactions from CSV'),
+          child: OutlinedButton.icon(
+            onPressed: data.accounts.isEmpty
+                ? null
+                : () => _showCsvImport(context, ref),
+            icon: const Icon(Icons.upload_file_outlined),
+            label: const AppText('Import CSV'),
+          ),
+        ),
+        Tooltip(
+          message: context.l10n.translate('Copy transactions as CSV'),
+          child: OutlinedButton.icon(
+            onPressed: () async {
+              await Clipboard.setData(
+                ClipboardData(text: controller.exportTransactionsCsv()),
+              );
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: AppText(
+                      '${data.transactions.length} transactions copied as CSV.',
+                    ),
+                  ),
+                );
+              }
+            },
+            icon: const Icon(Icons.download_outlined),
+            label: const AppText('Export CSV'),
+          ),
+        ),
         OutlinedButton.icon(
           onPressed: () => showCategoryManager(context),
           icon: const Icon(Icons.category_outlined),
@@ -103,6 +138,10 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
             ),
           ),
           const SizedBox(height: 16),
+          if (recurring.isNotEmpty) ...[
+            _RecurringCard(insights: recurring),
+            const SizedBox(height: 16),
+          ],
           SectionCard(
             padding: EdgeInsets.zero,
             child: visible.isEmpty
@@ -137,6 +176,114 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen> {
         ],
       ),
     );
+  }
+}
+
+class _RecurringCard extends StatelessWidget {
+  const _RecurringCard({required this.insights});
+
+  final List<RecurringTransactionInsight> insights;
+
+  @override
+  Widget build(BuildContext context) => SectionCard(
+    title: 'Recurring activity',
+    child: Wrap(
+      spacing: 12,
+      runSpacing: 12,
+      children: insights.take(4).map((item) {
+        final description =
+            '${context.l10n.translate(item.cadenceLabel)} • ${item.occurrences} ${context.l10n.translate('occurrences')} • ${context.l10n.translate('next')} ${DateFormats.short.format(item.nextExpectedDate)}';
+        return Semantics(
+          label:
+              '${item.title}, ${MoneyFormatter.amount(item.amountMinor)}, $description',
+          child: Container(
+            width: 260,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppText(
+                  item.title,
+                  style: const TextStyle(fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 4),
+                AppText(description),
+                const SizedBox(height: 4),
+                AmountText(minor: item.amountMinor, emphasized: true),
+              ],
+            ),
+          ),
+        );
+      }).toList(),
+    ),
+  );
+}
+
+Future<void> _showCsvImport(BuildContext context, WidgetRef ref) async {
+  final input = TextEditingController();
+  try {
+    final shouldImport = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const AppText('Import transactions from CSV'),
+        content: SizedBox(
+          width: 620,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const AppText(
+                'Paste CSV with columns: date, description, amount, account, category, note, pending. Invalid rows are skipped.',
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                key: const Key('csv-import-input'),
+                controller: input,
+                autofocus: true,
+                minLines: 8,
+                maxLines: 14,
+                keyboardType: TextInputType.multiline,
+                decoration: InputDecoration(
+                  labelText: context.l10n.translate('CSV data'),
+                  alignLabelWithHint: true,
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const AppText('Cancel'),
+          ),
+          FilledButton.icon(
+            onPressed: () => Navigator.pop(context, true),
+            icon: const Icon(Icons.upload_file_outlined),
+            label: const AppText('Import CSV'),
+          ),
+        ],
+      ),
+    );
+    if (shouldImport != true || !context.mounted) return;
+    final result = ref
+        .read(appControllerProvider.notifier)
+        .importTransactionsCsv(input.text);
+    final issueText = result.issues.isEmpty
+        ? ''
+        : ' ${result.issues.length} rows were skipped.';
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: AppText(
+          '${result.transactions.length} transactions imported.$issueText',
+        ),
+      ),
+    );
+  } finally {
+    input.dispose();
   }
 }
 

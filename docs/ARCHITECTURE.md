@@ -1,14 +1,15 @@
 # Architecture
 
 MoneyPilot currently has two application paths: a standalone Flutter client and
-a FastAPI service. They share financial rules and concepts, but the client is
-not yet connected to the API.
+a FastAPI service. They share financial rules and concepts. The client can
+authenticate and verify an API session, but financial data stays local.
 
 ```mermaid
 flowchart LR
     U["User"] --> F["Flutter client"]
     F --> L["Local profile and financial snapshot"]
     F --> C["Deterministic Local Coach"]
+    F -. "optional health and account session" .-> A
 
     D["API developer"] --> A["FastAPI service"]
     A --> S[("SQLite or PostgreSQL")]
@@ -25,13 +26,15 @@ GoRouter handles navigation. Responsive screens support desktop and mobile
 layouts.
 
 Local users, password hashes, recovery code hashes, settings, and financial
-snapshots are stored through `shared_preferences`. Each financial snapshot uses
-a key derived from the local user ID, which keeps profiles separate on the same
-device.
+snapshots are stored through `shared_preferences`. Each profile has a random
+256-bit data key and its snapshot is protected by authenticated AES-GCM
+encryption. Older plaintext snapshots are encrypted on their next successful
+load.
 
 The current storage format is a serialized application snapshot. It is useful
-for local development, but it is not a replacement for an encrypted database,
-transactions, migrations, or a synchronization queue.
+for local development, but it is not a replacement for a transactional database,
+migrations, or a synchronization queue. The data key is stored separately in
+app preferences; using a platform protected key store remains future work.
 
 ## FastAPI service
 
@@ -62,11 +65,12 @@ support future integrations; they are not authoritative financial storage.
 
 ## Boundaries to keep visible
 
-- Flutter authentication and API authentication are currently separate.
+- Flutter local profiles and API accounts are separate identities.
+- The client can create an in-memory API session and verify `/auth/me`.
 - The Flutter sync gateway does not transmit financial data.
 - The local coach and API provider are deterministic by default.
 - No production hosting configuration is included.
-- Local financial snapshots are not database level encrypted.
+- Local snapshots are encrypted, but keys are not hardware backed.
 
 These gaps are listed in [ROADMAP.md](ROADMAP.md) so the repository does not
 present planned infrastructure as finished behavior.
