@@ -64,6 +64,7 @@ jobs:
           $runtime = Join-Path $package "MoneyPilot Runtime"
           New-Item -ItemType Directory -Force -Path $runtime | Out-Null
           Copy-Item "build/windows/x64/runner/Release/*" $runtime -Recurse -Force
+          Rename-Item (Join-Path $runtime "money_pilot.exe") "MoneyPilotApp.exe"
           $compiler = Join-Path $env:WINDIR "Microsoft.NET/Framework64/v4.0.30319/csc.exe"
           $icon = Join-Path $root "apps\money_pilot\windows\runner\resources\app_icon.ico"
           $output = Join-Path $package "MoneyPilot.exe"
@@ -76,10 +77,12 @@ jobs:
         run: |
           $package = Join-Path (Resolve-Path "build/windows") "package"
           $launcher = Join-Path $package "MoneyPilot.exe"
+          $runtime = Join-Path $package "MoneyPilot Runtime\MoneyPilotApp.exe"
           Start-Process -FilePath $launcher -WorkingDirectory $package
           Start-Sleep -Seconds 8
-          $application = Get-Process -Name "MoneyPilot" -ErrorAction SilentlyContinue
-          if ($null -eq $application) { throw "MoneyPilot exited during smoke launch." }
+          $application = Get-Process -Name "MoneyPilotApp" -ErrorAction SilentlyContinue |
+            Where-Object { $_.Path -eq $runtime }
+          if ($null -eq $application) { throw "The packaged MoneyPilot runtime did not stay running." }
           $application | Stop-Process
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:

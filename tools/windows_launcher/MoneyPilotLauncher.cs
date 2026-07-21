@@ -10,7 +10,7 @@ internal static class MoneyPilotLauncher
     {
         string root = AppDomain.CurrentDomain.BaseDirectory;
         string runtime = Path.Combine(root, "MoneyPilot Runtime");
-        string application = Path.Combine(runtime, "MoneyPilot.exe");
+        string application = Path.Combine(runtime, "MoneyPilotApp.exe");
 
         if (!File.Exists(application))
         {
