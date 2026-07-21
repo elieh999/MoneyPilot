@@ -39,10 +39,20 @@ financial records yet.
 - FastAPI endpoints for authentication and financial records
 - Automated Flutter and Python tests
 
-## Running the project
+## Start on Windows
 
-The helper scripts target Windows PowerShell. Install Python 3.12 or newer and
-Flutter, then run:
+Download the repository as a ZIP, extract the whole folder, and double-click
+`MoneyPilot.exe` in the top-level folder. The included Windows build does not
+require Flutter, Python, Docker, or PowerShell.
+
+Keep `MoneyPilot.exe` beside the `MoneyPilot Runtime` folder. Windows SmartScreen
+may ask for confirmation because this open-source development build is not code
+signed yet.
+
+## Run from source
+
+Developers who want to change the code can install Python 3.12 or newer and
+Flutter, then run the helper scripts:
 
 ```powershell
 .\scripts\setup-dev.ps1
