@@ -21,7 +21,6 @@ from ..schemas import (
 )
 from ..services import ensure_version, owned_or_404, validate_optional_links
 
-
 router = APIRouter(tags=["planning"])
 
 

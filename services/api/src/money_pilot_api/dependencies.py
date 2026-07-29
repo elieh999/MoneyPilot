@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import timezone
+from datetime import UTC
 
 from fastapi import Depends, HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -9,7 +9,6 @@ from sqlalchemy.orm import Session
 from .database import get_db
 from .models import User, UserSession, utc_now
 from .security import decode_token
-
 
 bearer_scheme = HTTPBearer(auto_error=False)
 
@@ -30,7 +29,7 @@ def get_current_user(
         raise HTTPException(status_code=401, detail="Authentication session is invalid")
     expires = session.expires_at
     if expires.tzinfo is None:
-        expires = expires.replace(tzinfo=timezone.utc)
+        expires = expires.replace(tzinfo=UTC)
     if (
         session.revoked_at is not None
         or expires <= utc_now()

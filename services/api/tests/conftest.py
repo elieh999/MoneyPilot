@@ -8,7 +8,6 @@ from typing import Any
 import pytest
 from fastapi.testclient import TestClient
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(PROJECT_ROOT / "services" / "api" / "src"))
 sys.path.insert(0, str(PROJECT_ROOT / "packages" / "financial_core_python" / "src"))

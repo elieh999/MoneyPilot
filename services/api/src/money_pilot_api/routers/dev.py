@@ -13,7 +13,6 @@ from ..schemas import DemoSeedRead, TransactionCreate
 from ..security import hash_password
 from ..services import create_transaction
 
-
 router = APIRouter(prefix="/dev", tags=["development"])
 
 DEMO_EMAIL = "demo@moneypilot.dev"

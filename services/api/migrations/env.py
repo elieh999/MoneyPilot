@@ -8,13 +8,11 @@ from pathlib import Path
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-
 API_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(API_ROOT / "src"))
 
-from money_pilot_api.database import Base  # noqa: E402
 from money_pilot_api import models  # noqa: E402,F401
-
+from money_pilot_api.database import Base  # noqa: E402
 
 config = context.config
 if config.config_file_name is not None:
