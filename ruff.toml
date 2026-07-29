@@ -1,0 +1,44 @@
+# Ruff configuration for the Python side of MoneyPilot.
+#
+# The rule set is listed explicitly on purpose. Without this file Ruff falls
+# back to whatever its built in defaults happen to be, and those defaults change
+# between releases, so the same code can pass locally and fail in CI after an
+# unrelated Ruff upgrade. Pinning the selection here keeps the lint result the
+# same no matter which Ruff version is installed.
+
+target-version = "py312"
+line-length = 88
+
+[lint]
+select = [
+  "E",    # pycodestyle errors
+  "F",    # pyflakes
+  "I",    # import sorting
+  "B",    # flake8-bugbear
+  "UP",   # pyupgrade
+  "SIM",  # flake8-simplify
+  "RUF",  # ruff specific rules
+]
+
+ignore = [
+  # FastAPI declares dependencies as parameter defaults, so Depends(...),
+  # Query(...) and friends in a signature are the documented pattern rather
+  # than the mutable default argument bug this rule looks for.
+  "B008",
+  # `ruff format` owns line length. The lines that stay over the limit are
+  # single string literals that the formatter cannot split, so leaving E501 on
+  # would mean fighting the formatter over text it has already accepted.
+  "E501",
+  # Rewriting the existing TypeVar helpers into PEP 695 syntax is a style
+  # change to code that already works, and Ruff only offers it as an unsafe
+  # fix, so it is not worth the churn.
+  "UP047",
+]
+
+[lint.per-file-ignores]
+# Alembic generates migrations with a fixed header layout, and the revision
+# identifiers it writes are not import statements.
+"services/api/migrations/versions/*.py" = ["I001"]
+
+[lint.isort]
+known-first-party = ["money_pilot_api", "money_pilot_financial_core"]
