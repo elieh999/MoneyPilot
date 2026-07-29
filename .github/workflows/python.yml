@@ -6,12 +6,14 @@ on:
       - "services/api/**"
       - "packages/financial_core_python/**"
       - "packages/financial_contracts/**"
+      - "ruff.toml"
       - ".github/workflows/python.yml"
   pull_request:
     paths:
       - "services/api/**"
       - "packages/financial_core_python/**"
       - "packages/financial_contracts/**"
+      - "ruff.toml"
       - ".github/workflows/python.yml"
   workflow_dispatch:
 
@@ -43,7 +45,6 @@ jobs:
             python -m pip install -e ".[dev]"
           fi
           popd
-          python -m pip install ruff
       - name: Format
         run: python -m ruff format --check services/api packages/financial_core_python
       - name: Lint
