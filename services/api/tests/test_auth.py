@@ -107,4 +107,3 @@ def test_registration_rejects_passwords_that_bypass_client_strength_rules(
 
     assert response.status_code == 422
     assert "uppercase, lowercase, and numeric" in response.text
-
