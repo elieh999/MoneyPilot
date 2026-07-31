@@ -460,4 +460,3 @@ class DemoSeedRead(APIModel):
     password: str
     user_id: UUID
     seeded: bool
-
