@@ -58,6 +58,19 @@ class RegisterRequest(APIModel):
 
     _normalize_currency = field_validator("currency")(_currency)
 
+    @field_validator("password")
+    @classmethod
+    def validate_password_strength(cls, value: str) -> str:
+        if (
+            not any(character.isupper() for character in value)
+            or not any(character.islower() for character in value)
+            or not any(character.isdigit() for character in value)
+        ):
+            raise ValueError(
+                "password must include uppercase, lowercase, and numeric characters"
+            )
+        return value
+
 
 class LoginRequest(APIModel):
     email: EmailStr
@@ -447,3 +460,4 @@ class DemoSeedRead(APIModel):
     password: str
     user_id: UUID
     seeded: bool
+
