@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-from datetime import timedelta
 import hashlib
 import json
+from dataclasses import dataclass
+from datetime import timedelta
 from typing import Any, Protocol
 
 from sqlalchemy import select
@@ -11,7 +11,6 @@ from sqlalchemy.orm import Session
 
 from .models import AIActionProposal, Bill, User, utc_now
 from .services import financial_summary, safe_to_spend_summary
-
 
 DISCLAIMER = (
     "MoneyPilot AI provides educational guidance, not professional financial, "
@@ -23,7 +22,7 @@ def proposal_payload_hash(action_type: str, payload: dict[str, Any]) -> str:
     canonical = json.dumps(
         payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True
     )
-    return hashlib.sha256(f"{action_type}:{canonical}".encode("utf-8")).hexdigest()
+    return hashlib.sha256(f"{action_type}:{canonical}".encode()).hexdigest()
 
 
 @dataclass(frozen=True, slots=True)

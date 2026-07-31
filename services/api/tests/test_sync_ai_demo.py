@@ -1,8 +1,12 @@
 from datetime import timedelta
 
+import pytest
 from fastapi.testclient import TestClient
 
+from money_pilot_api.config import Settings
+from money_pilot_api.main import create_app
 from money_pilot_api.models import AIActionProposal, utc_now
+from money_pilot_api.routers.dev import DEMO_EMAIL, DEMO_PASSWORD
 
 
 def test_sync_create_is_idempotent_and_stale_update_conflicts(
@@ -197,6 +201,30 @@ def test_development_seed_is_idempotent_and_demo_can_login(client: TestClient) -
     summary = client.get("/api/v1/dashboard/summary", headers=headers)
     assert summary.status_code == 200
     assert summary.json()["current_month_income_minor"] == 250_000
+
+
+@pytest.mark.parametrize("environment", ["production", "PRODUCTION", "prod", "Prod"])
+def test_development_seed_is_hidden_in_production(environment: str) -> None:
+    """The seed route needs no authentication and creates a user with a password
+    that is committed to this repository, so production must never expose it."""
+
+    app = create_app(
+        Settings(
+            database_url="sqlite://",
+            environment=environment,
+            jwt_secret="production-secret-that-is-long-enough-to-pass",
+            access_token_minutes=15,
+            refresh_token_days=30,
+        )
+    )
+    with TestClient(app) as production_client:
+        response = production_client.post("/api/v1/dev/seed-demo")
+        assert response.status_code == 404, response.text
+        login = production_client.post(
+            "/api/v1/auth/login",
+            json={"email": DEMO_EMAIL, "password": DEMO_PASSWORD},
+        )
+        assert login.status_code == 401, login.text
 
 
 def test_health_openapi_and_correlation_id(client: TestClient) -> None:

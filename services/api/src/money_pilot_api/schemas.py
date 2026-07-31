@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import date, datetime, timezone
+from datetime import UTC, date, datetime
 from typing import Any, Literal
 from uuid import UUID
 
@@ -12,7 +12,6 @@ from pydantic import (
     field_validator,
     model_validator,
 )
-
 
 CurrencyCode = str
 AccountType = Literal[
@@ -170,7 +169,7 @@ class TransactionCreate(APIModel):
     transaction_type: TransactionType
     amount_minor: int = Field(gt=0)
     currency: str = "USD"
-    occurred_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    occurred_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     account_id: UUID
     destination_account_id: UUID | None = None
     category_id: UUID | None = None
@@ -182,7 +181,7 @@ class TransactionCreate(APIModel):
     _normalize_currency = field_validator("currency")(_currency)
 
     @model_validator(mode="after")
-    def validate_transfer(self) -> "TransactionCreate":
+    def validate_transfer(self) -> TransactionCreate:
         if self.transaction_type == "transfer":
             if self.destination_account_id is None:
                 raise ValueError("destination_account_id is required for transfers")
@@ -241,7 +240,7 @@ class BudgetCreate(APIModel):
     rollover_mode: Literal["none", "positive", "overspending", "both"] = "none"
 
     @model_validator(mode="after")
-    def validate_period(self) -> "BudgetCreate":
+    def validate_period(self) -> BudgetCreate:
         if self.period_end < self.period_start:
             raise ValueError("period_end cannot be before period_start")
         return self
@@ -331,7 +330,7 @@ class GoalCreate(APIModel):
     _normalize_currency = field_validator("currency")(_currency)
 
     @model_validator(mode="after")
-    def validate_current(self) -> "GoalCreate":
+    def validate_current(self) -> GoalCreate:
         if self.current_minor > self.target_minor:
             raise ValueError("current_minor cannot exceed target_minor")
         return self
@@ -400,7 +399,7 @@ class SyncOperationRequest(APIModel):
     payload: dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="after")
-    def validate_operation(self) -> "SyncOperationRequest":
+    def validate_operation(self) -> SyncOperationRequest:
         if self.operation != "create" and self.entity_id is None:
             raise ValueError("entity_id is required for update and delete")
         if self.operation == "update" and self.base_version is None:

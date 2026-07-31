@@ -10,7 +10,6 @@ from ..models import Account, User, utc_now
 from ..schemas import AccountCreate, AccountRead, AccountUpdate, MessageResponse
 from ..services import ensure_version, owned_or_404
 
-
 router = APIRouter(prefix="/accounts", tags=["accounts"])
 
 

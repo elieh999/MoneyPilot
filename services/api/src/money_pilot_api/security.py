@@ -4,7 +4,7 @@ import hashlib
 import secrets
 import uuid
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import jwt
@@ -16,7 +16,6 @@ from sqlalchemy.orm import Session
 
 from .config import Settings
 from .models import User, UserSession, utc_now
-
 
 ALGORITHM = "HS256"
 PASSWORD_HASHER = PasswordHasher(
@@ -157,7 +156,7 @@ def rotate_refresh_token(
         raise HTTPException(status_code=401, detail="Refresh session is not valid")
     expires = session.expires_at
     if expires.tzinfo is None:
-        expires = expires.replace(tzinfo=timezone.utc)
+        expires = expires.replace(tzinfo=UTC)
     if expires <= utc_now():
         raise HTTPException(status_code=401, detail="Refresh session has expired")
     supplied_jti = str(payload.get("jti", ""))
