@@ -90,3 +90,20 @@ def test_duplicate_registration_and_unauthenticated_access(
     )
     assert duplicate.status_code == 409
     assert client.get("/api/v1/accounts").status_code == 401
+
+
+def test_registration_rejects_passwords_that_bypass_client_strength_rules(
+    client: TestClient,
+) -> None:
+    response = client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": "weak-password@test.example",
+            "password": "alllowercase123",
+            "display_name": "Weak Password",
+            "currency": "USD",
+        },
+    )
+
+    assert response.status_code == 422
+    assert "uppercase, lowercase, and numeric" in response.text
