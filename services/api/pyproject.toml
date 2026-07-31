@@ -24,7 +24,7 @@ dev = [
   "httpx>=0.28,<1",
   "pytest>=8.3,<10",
   "pytest-cov>=6,<8",
-  "ruff>=0.15,<1",
+  "ruff>=0.15,<0.16",
 ]
 
 [tool.setuptools.packages.find]
