@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta
 from typing import Any, TypeVar
 from uuid import UUID
 
@@ -17,7 +17,6 @@ from money_pilot_financial_core import (
 
 from . import models
 from .schemas import TransactionCreate, TransactionUpdate
-
 
 OwnedModel = TypeVar(
     "OwnedModel",
@@ -249,7 +248,7 @@ def financial_summary(db: Session, user: models.User) -> dict[str, Any]:
     )
 
     now = models.utc_now()
-    month_start = datetime(now.year, now.month, 1, tzinfo=timezone.utc)
+    month_start = datetime(now.year, now.month, 1, tzinfo=UTC)
     transactions = db.scalars(
         select(models.Transaction).where(
             models.Transaction.user_id == user.id,

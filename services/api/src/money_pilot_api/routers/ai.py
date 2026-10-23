@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from datetime import timezone
 import secrets
+from datetime import UTC
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from ..ai import AIToolService, DISCLAIMER, proposal_payload_hash
+from ..ai import DISCLAIMER, AIToolService, proposal_payload_hash
 from ..database import get_db
 from ..dependencies import get_current_user
 from ..models import AIActionProposal, Budget, User, utc_now
@@ -21,7 +21,6 @@ from ..schemas import (
 )
 from ..services import owned_or_404, validate_optional_links
 
-
 router = APIRouter(prefix="/ai", tags=["ai"])
 tool_service = AIToolService()
 
@@ -34,7 +33,7 @@ def _validate_pending_proposal(db: Session, proposal: AIActionProposal) -> None:
     now = utc_now()
     expires_at = proposal.expires_at
     if expires_at.tzinfo is None:
-        expires_at = expires_at.replace(tzinfo=timezone.utc)
+        expires_at = expires_at.replace(tzinfo=UTC)
     if expires_at <= now:
         proposal.status = "expired"
         proposal.resolved_at = now

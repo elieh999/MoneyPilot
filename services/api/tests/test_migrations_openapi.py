@@ -8,7 +8,6 @@ from alembic.config import Config
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine, inspect
 
-
 API_ROOT = Path(__file__).resolve().parents[1]
 
 

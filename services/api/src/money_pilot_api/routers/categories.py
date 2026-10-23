@@ -10,7 +10,6 @@ from ..models import Category, User, utc_now
 from ..schemas import CategoryCreate, CategoryRead, CategoryUpdate, MessageResponse
 from ..services import ensure_version, owned_or_404
 
-
 router = APIRouter(prefix="/categories", tags=["categories"])
 
 

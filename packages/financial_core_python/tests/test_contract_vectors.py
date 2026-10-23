@@ -9,7 +9,6 @@ from money_pilot_financial_core import (
     savings_rate_basis_points,
 )
 
-
 VECTORS_PATH = (
     Path(__file__).resolve().parents[2] / "financial_contracts" / "vectors.json"
 )

@@ -8,9 +8,9 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from .. import models, schemas
 from ..database import get_db
 from ..dependencies import get_current_user
-from .. import models, schemas
 from ..services import (
     create_transaction,
     delete_transaction,
@@ -19,7 +19,6 @@ from ..services import (
     update_transaction,
     validate_optional_links,
 )
-
 
 router = APIRouter(prefix="/sync", tags=["sync"])
 

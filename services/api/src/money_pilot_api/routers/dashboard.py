@@ -11,7 +11,6 @@ from ..models import User, utc_now
 from ..schemas import DashboardRead, SafeToSpendRead
 from ..services import financial_summary, safe_to_spend_summary
 
-
 router = APIRouter(tags=["dashboard"])
 
 
